@@ -1,0 +1,149 @@
+---
+title: "Dipeptide Numerical Analysis"
+author: "Matthew Curcio"
+date: "August 31, 2017"
+output: html_document
+---
+
+
+## Introduction   
+
+### Produce AA matrix:  
+
+Column 1 = Protein Class (0:6)  
+Column 2 = Total AA per protein  
+Columns 3:22; (G, P, A, V, L, I, M, C, F, Y, W, H, K, R, Q, N, E, D, S, T)  
+Columns 23:422; (GG, GP, GA, ... , TT)  
+
+
+```{r libraires}
+suppressMessages(library(seqinr))
+suppressMessages(library(stringr))
+suppressMessages(library(readr))
+suppressMessages(library(dplyr))
+```
+
+Import data
+```{r}
+anticancer <- read.fasta(file = "uniprot-anti+cancer+peptide.fasta",
+                         seqtype = "AA", 
+                         as.string = TRUE,
+                         seqonly = TRUE)
+```
+
+### The section below writes empty files such that data can appended later.
+
+```{r}
+
+write_empty_files <- function(protein_class) {
+    UNIPROT_DIR = "~/Dropbox/git_projects/random_forest_dk_project/uniprot_1"
+    setwd(UNIPROT_DIR)
+    d = amino_acid_labels()
+    file_name = paste("mono_di_peptide_class", protein_class, ".csv", sep = "")
+    write(d, file = file_name, ncolumns = 422, sep = ",")
+}
+```
+
+aa_lables
+```{r}
+amino_acid_labels = function() {
+    prefix_columns = c("class", "total_aa")
+    peptides = c("G", "P", "A", "V", "L", "I", "M", "C", "F", "Y",
+                 "W", "H", "K", "R", "Q", "N", "E", "D", "S", "T")
+    peptide_titles <- c(prefix_columns, peptides)
+    # Add DIPEPTIDES column titles
+    for (i in 1:20) {
+        for (j in 1:20) {
+            di_peptide_titles <- paste(peptides[i], peptides[j], sep = "")
+            peptide_titles <-  c(peptide_titles, di_peptide_titles)
+        }
+    }
+    return(peptide_titles)
+}
+```
+
+
+```{r write_7_empty_files, eval=FALSE}
+    
+##### write_7_files with protein classes = (0,1,...,6)
+write_7_files <- function() {
+    for (i in 0:6) {
+        write_empty_files(protein_class = i)
+    }
+}
+```
+
+### Read the sequence files into memory
+
+```{r read_seq_2_df, eval=FALSE}
+
+read_seq_2_df <- function(class) {
+    WORKING_DIR = "~/Dropbox/git_projects/random_forest_dk_project/uniprot_1"
+    setwd(WORKING_DIR)
+    seq_binders = list.files(pattern = ".txt$")
+    seq_binders
+    # length(seq_binders)
+    df = read.csv(file = seq_binders[class+1], header = FALSE, sep = "")
+    df %>% mutate_if(is.factor, as.character) -> df
+    df = t(df)
+    return (df)
+}
+```
+
+
+### Prepare MONO_DI_PEPTIDE Percents
+
+```{r calculate_mono_di_peptide_percent, eval=FALSE}
+
+calculate_mono_di_peptide_percent <- function(df, class) {
+    peptides = amino_acid_labels()
+    for (row in seq(length(df))) {
+        aa_nums = as.vector(matrix(0, ncol = 422))
+        # First column is class
+        aa_nums[1] = class
+        # Second column is total number of amino acids
+        total_aa = nchar(df[1, row])
+        aa_nums[2] = total_aa
+        # Column 3:22 - Calculate percent AA
+        for (i in 3:422) {
+            aa_nums[i] = str_count(df[1, row], peptides[i]) / total_aa
+        }
+        write_aa_nums_to_file(aa_nums, class)
+    }
+}
+```
+
+
+```{r write_aa_nums_to_file, eval=FALSE}
+
+write_aa_nums_to_file <- function(aa_nums, class) {
+    write_2_csv_post_aa_percents = list.files(pattern = ".csv$")
+    # csv_write_post_aa_percents
+    # length(csv_write_post_aa_percents)
+    write(x = aa_nums, file = write_2_csv_post_aa_percents[class+1], 
+          append = TRUE, ncolumns = 422, sep = ",")
+}
+```
+
+```{r, produce_mono_di_peptide_percents, eval=FALSE}
+
+for (class in 0:6) {
+    df = read_seq_2_df(class)
+    calculate_mono_di_peptide_percent(df, class)
+}
+```
+
+```{r merge_csv_percent_files, eval=FALSE}
+
+
+DIPEPTIDE_DIR = "/home/mcc/Dropbox/git_projects/random_forest_dk_project/uniprot_1/dipeptides"
+setwd(DIPEPTIDE_DIR)
+filenames=list.files()
+#filenames
+# IN BASH: cat *.csv > complete_file.csv1
+
+```
+
+
+
+

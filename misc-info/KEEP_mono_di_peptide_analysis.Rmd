@@ -1,0 +1,343 @@
+---
+title: "Random Forest: Dipeptide Numerical Analysis"
+author: "Matthew Curcio"
+date: "August 31, 2017"
+output: html_document
+---
+
+
+## Introduction   
+
+For additional information see, [Building A Random Forest Classifier](https://www.biostars.org/p/86981/)  
+
+This work can be found on [GitHub](https://github.com/mccurcio/random_forest_dk_project) and on [RPubs](http://rpubs.com/oaxacamatt/Random_Forest_Oxygen_Binders).
+
+### Protein classes:
+
+0. Homo sapiens proteins - reviewed  
+1. [Erythrocruorin](https://en.wikipedia.org/wiki/Erythrocruorin)  
+2. [Hemerythrin](https://en.wikipedia.org/wiki/Hemerythrin)  
+3. [Hemocyanin](https://en.wikibooks.org/wiki/Structural_Biochemistry/Hemocyanin)  
+4. [Leghemoglobin](https://en.wikipedia.org/wiki/Leghemoglobin)  
+5. [Myoglobin](https://en.wikipedia.org/wiki/Myoglobin)  
+6. [Hemoglobin](https://en.wikipedia.org/wiki/Hemoglobin)  
+
+
+### Produce AA matrix:  
+
+Column 1 = Protein Class (0:6)  
+Column 2 = Total AA per protein  
+Columns 3:22; (G, P, A, V, L, I, M, C, F, Y, W, H, K, R, Q, N, E, D, S, T)  
+Columns 23:422; (GG, GP, GA, ... , TT)  
+
+
+```{r libraires}
+suppressMessages(library(seqinr))
+suppressMessages(library(stringr))
+suppressMessages(library(readr))
+suppressMessages(library(dplyr))
+
+# devtools::install_github("MI2DataLab/randomForestExplainer")
+# suppressMessages(library(randomForestExplainer))
+```
+
+### Reads the sequence files
+
+```{r read_seq_file, eval=FALSE}
+
+read_seq_file <- function() {
+    UNIPROT_DIR = "~/Dropbox/git_projects/random_forest_dk_project/uniprot_1"
+    setwd(UNIPROT_DIR)
+    o2_seqs = list.files(pattern = ".txt$")
+    for (i in 1:7) {
+        df = read.csv(file = o2_seqs[i], header = FALSE)
+        df %>% mutate_if(is.factor, as.character) -> df
+    }
+    return(seq_df)
+}
+```
+
+### The section below writes empty files such that data can appended later.
+
+```{r prepare_files, eval=FALSE}
+
+write_empty_files <- function(protein_class) {
+    UNIPROT_DIR = "~/Dropbox/git_projects/random_forest_dk_project/uniprot_1"
+    setwd(UNIPROT_DIR)
+    d = amino_acid_labels()
+    file_name = paste("mono_di_peptide_class", protein_class, ".csv", sep = "")
+    write(d, file = file_name, ncolumns = 422, sep = ",")
+}
+```
+
+
+```{r aa_lables, eval=FALSE}
+
+amino_acid_labels = function() {
+    prefix_columns = c("class", "total_aa")
+    peptides = c("G", "P", "A", "V", "L", "I", "M", "C", "F", "Y",
+                 "W", "H", "K", "R", "Q", "N", "E", "D", "S", "T")
+    peptide_titles <- c(prefix_columns, peptides)
+    # Add DIPEPTIDES column titles
+    for (i in 1:20) {
+        for (j in 1:20) {
+            di_peptide_titles <- paste(peptides[i], peptides[j], sep = "")
+            peptide_titles <-  c(peptide_titles, di_peptide_titles)
+        }
+    }
+    return(peptide_titles)
+}
+```
+
+
+```{r write_7_empty_files, eval=FALSE}
+    
+##### write_7_files with protein classes = (0,1,...,6)
+write_7_files <- function() {
+    for (i in 0:6) {
+        write_empty_files(protein_class = i)
+    }
+}
+```
+
+### Read the sequence files into memory
+
+```{r read_seq_2_df, eval=FALSE}
+
+read_seq_2_df <- function(class) {
+    WORKING_DIR = "~/Dropbox/git_projects/random_forest_dk_project/uniprot_1"
+    setwd(WORKING_DIR)
+    seq_binders = list.files(pattern = ".txt$")
+    seq_binders
+    # length(seq_binders)
+    df = read.csv(file = seq_binders[class+1], header = FALSE, sep = "")
+    df %>% mutate_if(is.factor, as.character) -> df
+    df = t(df)
+    return (df)
+}
+```
+
+
+### Prepare MONO_DI_PEPTIDE Percents
+
+```{r calculate_mono_di_peptide_percent, eval=FALSE}
+
+calculate_mono_di_peptide_percent <- function(df, class) {
+    peptides = amino_acid_labels()
+    for (row in seq(length(df))) {
+        aa_nums = as.vector(matrix(0, ncol = 422))
+        # First column is class
+        aa_nums[1] = class
+        # Second column is total number of amino acids
+        total_aa = nchar(df[1, row])
+        aa_nums[2] = total_aa
+        # Column 3:22 - Calculate percent AA
+        for (i in 3:422) {
+            aa_nums[i] = str_count(df[1, row], peptides[i]) / total_aa
+        }
+        write_aa_nums_to_file(aa_nums, class)
+    }
+}
+```
+
+
+```{r write_aa_nums_to_file, eval=FALSE}
+
+write_aa_nums_to_file <- function(aa_nums, class) {
+    write_2_csv_post_aa_percents = list.files(pattern = ".csv$")
+    # csv_write_post_aa_percents
+    # length(csv_write_post_aa_percents)
+    write(x = aa_nums, file = write_2_csv_post_aa_percents[class+1], 
+          append = TRUE, ncolumns = 422, sep = ",")
+}
+```
+
+```{r, produce_mono_di_peptide_percents, eval=FALSE}
+
+for (class in 0:6) {
+    df = read_seq_2_df(class)
+    calculate_mono_di_peptide_percent(df, class)
+}
+```
+
+```{r merge_csv_percent_files, eval=FALSE}
+
+
+DIPEPTIDE_DIR = "/home/mcc/Dropbox/git_projects/random_forest_dk_project/uniprot_1/dipeptides"
+setwd(DIPEPTIDE_DIR)
+filenames=list.files()
+#filenames
+# IN BASH: cat *.csv > complete_file.csv1
+
+```
+
+=======================================================================
+
+This portion below contains RANDOM FOREST calculations & interpretation
+
+=======================================================================
+
+```{r second_library}
+suppressMessages(library(randomForest))
+```
+
+### Set the working directory and file names for Input/output
+
+Next we will read in the data set (expecting a comma-delimited file with header line and rownames). 
+
+```{r inspect_data_file}
+setwd("~/Dropbox/git_projects/random_forest_dk_project/uniprot_1")
+
+DIPEPTIDE_DIR = "/home/mcc/Dropbox/git_projects/random_forest_dk_project/uniprot_1"
+setwd(DIPEPTIDE_DIR)
+data_file = "complete_file.csv"
+
+data_import = read.table(data_file, header = TRUE, na.strings = "NA", sep = ",")
+
+dim(data_import)
+```
+
+```{r}
+table(is.na(data_import))
+```
+
+The data set 'all_classes' has the following structure:
+```{r data_structure}
+# str(data_import)
+```
+
+NOTE: I tried running this large matrix, data_import, and found that it took 25 minutes to train but more importantly it took 8 hours to run 18% through.   
+
+Therefore: 
+1. I have deiced to reduce the sparse-ness of this matrix.   
+2. I also want to reduce the number of small proteins that are only fragments. I will reduce proteins less than 100 amino acids in length.  
+
+```{r reduce_size_data_import}
+
+data_redux = data_import
+data_redux = data_redux[, colSums(abs(data_redux)) != 0]
+
+dim(data_redux)
+
+```
+
+```{r}
+# based on variable values
+data_redux <- data_import[which(data_import$total_aa > 99), ]
+
+dim(data_redux)
+```
+
+
+```{r}
+table(is.numeric(data_redux))
+```
+
+
+## Training the Random Forest
+
+We will use all the Predictors in the dataset.
+
+Before we build our model, let’s separate our data into testing and training sets. This will place 75% of the observations of the original dataset into 'train' and the remaining 25% of the observations into 'test.'  
+
+Total number of samples [data_file = "complete_file.csv"] = 20785 observations
+75% of 20050 = 15037.5  
+Therefore, training sample = 15037 observations  
+
+## Training Set
+
+```{r train}
+set.seed(123)
+train = sample(1:nrow(data_redux), 15037)
+
+# Start the clock!
+ptm <- proc.time()
+
+all_classes.rf = randomForest(class ~ . , 
+                              data = data_redux, 
+                              type = "classification",
+                              subset = train)
+
+# Stop the clock
+cat ("Training run time:" , (proc.time() - ptm)/60, "minutes")
+```
+
+```{r}
+
+all_classes.rf
+
+```
+
+# Plotting the Error vs Number of Trees Graph.  
+```{r plot}
+plot(all_classes.rf, main = "MS Error of Resisduals Vs Number of Trees Produced",
+     col = "dark red")
+```
+
+
+This plot shows the MS Error Vs. the Number of Trees. We can notice that the Error drops as the program adds more trees then averages them. At 401 trees the MSE is at a plateau.
+
+===================================
+
+Now we can compare the **Out of Bag Sample Errors and Error** on Test set.
+
+The above Random Forest model chose Randomly 140 variables to be considered at each split. We could now try all possible 420 predictors which can be found at each split.  
+
+**mtry**	  
+Number of variables randomly sampled as candidates at each split. Note that the default values are classification (sqrt(p) where p is number of variables in x) and regression (p/3)   
+classification: sqrt(422) = ~20.49
+regression 422/3 = 140.666666667
+===================================  
+
+```{r setup_classes}
+class = data_import[, 1]
+class[class == 0] = "all_Homosapiens"
+class[class == 1] = "oxygen_binders"
+class = as.factor(class)
+```
+
+
+```{r mtry=420}
+
+# Start the clock!
+ptm <- proc.time()
+
+set.seed(123)
+oob.err = double(421)
+test.err = double(421)
+
+#mtry is no of Variables randomly chosen at each split
+for(mtry in 2:3) {
+    rf = randomForest(class ~ . ,
+                      data = data_import,
+                      type = "classification",
+                      subset = train,
+                      mtry = mtry,
+                      ntree = 201,
+                      localImp = TRUE,
+                      importance = TRUE)
+    
+    oob.err[mtry] = rf$mse[201] #Error of all Trees fitted
+    
+    pred <- predict(rf, data_import[-train,]) 
+    #Predictions on Test Set for each Tree
+    
+    test.err[mtry] = with(data_import[-train,], mean((class - pred) ^ 2)) 
+    #Mean Squared Test Error
+    
+    cat(mtry, " ") 
+    #print the output to the console
+}
+
+cat ("\n")
+# Stop the clock
+cat ("Testing run time:" , (proc.time() - ptm)/3600, "hours")
+
+```
+
+
+
+
+
+
+

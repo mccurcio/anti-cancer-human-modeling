@@ -1,0 +1,160 @@
+---
+title: "Random Forest: Dipeptide Numerical Analysis"
+author: "Matthew Curcio"
+date: "August 31, 2017"
+output: html_document
+---
+
+
+## Introduction  
+
+text
+
+This work can be found on [GitHub](https://github.com/mccurcio/random_forest_dk_project) and on [RPubs](http://rpubs.com/oaxacamatt/Random_Forest_Oxygen_Binders).
+
+### Protein classes:
+
+0. Homo sapiens proteins - reviewed
+1. [Erythrocruorin](https://en.wikipedia.org/wiki/Erythrocruorin)
+2. [Hemerythrin](https://en.wikipedia.org/wiki/Hemerythrin)
+3. [Hemocyanin](https://en.wikibooks.org/wiki/Structural_Biochemistry/Hemocyanin)
+4. [Leghemoglobin](https://en.wikipedia.org/wiki/Leghemoglobin)
+5. [Myoglobin](https://en.wikipedia.org/wiki/Myoglobin)
+6. [Hemoglobin](https://en.wikipedia.org/wiki/Hemoglobin)
+
+
+### Produce AA matrix:
+
+Column 1 = Protein Class (0:6)  
+Column 2 = Total AA per protein  
+Columns 3:22; (G, P, A, V, L, I, M, C, F, Y, W, H, K, R, Q, N, E, D, S, T)  
+
+
+?? found in hemoglobin file line six: aa = 1156
+sp|Q86VB7|C163A_HUMAN Scavenger receptor cysteine-rich type 1 protein M130 OS=Homo sapiens GN=CD163 PE=1 SV=2
+
+```{r libraires}
+suppressMessages(library(seqinr))
+suppressMessages(library(stringr))
+suppressMessages(library(readr))
+suppressMessages(library(randomForest))
+suppressMessages(library(dplyr))
+
+# devtools::install_github("MI2DataLab/randomForestExplainer")
+suppressMessages(library(randomForestExplainer))
+```
+
+===================================================
+
+# Preparation of Dipeptides and Numerical Analysis
+
+===================================================
+
+The section below writes empty files such that data can appended later.
+```{r prepare_file}
+prepare_col_titles <- function(protein_class) {
+    UNIPROT_DIR = "~/Dropbox/git_projects/random_forest_dk_project/uniprot_1"
+    setwd(UNIPROT_DIR)
+    prefix_cols = c("class", "total_aa")
+    peptides = c( "G", "P", "A", "V", "L", "I", "M", "C", "F", "Y",
+                  "W", "H", "K", "R", "Q", "N", "E", "D", "S", "T")
+    l <- c(prefix_cols, peptides)
+    # Add DIPEPTIDES column titles
+    for (i in 1:20) {
+        for (j in 1:20) {
+            l <- c(l, paste(peptides[i], peptides[j], sep = ""))
+        }
+    }
+    # open/write/save dipeptide file for later appendix
+    file_name = paste("dipeptide_class", protein_class, ".csv", sep = "")
+    write(l, file = file_name, ncolumns = 422, sep = ",")
+}
+
+write_empty_files <- function() {
+    for (i in 0:6) {
+        prepare_col_titles(protein_class = i)
+    }
+}
+
+# RUN
+write_empty_files()
+# END
+
+```
+
+
+```{r read_seq_2_numerical}
+
+read_seq_txt_2_numerical <- function() {
+    UNIPROT_DIR = "~/Dropbox/git_projects/random_forest_dk_project/uniprot_1"
+    setwd(UNIPROT_DIR)
+    o2_seqs = list.files(pattern = ".txt$")
+    for (i in 1:7) {
+        df = read.csv(file = o2_seqs[i], header = FALSE)
+        df %>% mutate_if(is.factor, as.character) -> df
+        aa_nums = prepare_monopeptide_percent(df, protein_class = (i-1))
+        aa_nums = t(aa_nums)
+        prepare_dipeptide_percent(df, protein_class = (i-1), aa_nums)
+    }
+}
+
+# Begin Calculation of Percent MONO-peptides AND DI-peptides
+read_seq_txt_2_numerical()
+# END
+
+```
+
+### Prepare MONOPEPTIDE Percent
+
+```{r prepare_monopeptide_percent}
+
+prepare_monopeptide_percent <- function(df, protein_class) {
+    peptides = c("G", "P", "A", "V", "L", "I", "M", "C", "F", "Y",
+                 "W", "H", "K", "R", "Q", "N", "E", "D", "S", "T")
+    aa_nums = as.vector(matrix(0, ncol = 22))
+    for (row in seq(length(df))) {
+        # First column is protein_class
+        aa_nums[1] = protein_class
+        # Second column is total number of amino acids
+        total_aa = nchar(df[1, row])
+        aa_nums[2] = total_aa
+        # Column 3:22 - Calculate percent AA
+        for (i in 1:20) {
+            aa_nums[i + 2] = str_count(df[1, row], peptides[i]) / total_aa
+        }
+    }
+    return(aa_nums)
+}
+
+
+```
+
+### Prepare DIPEPTIDE Percent
+
+```{r prepare_dipeptide_percent}
+
+prepare_dipeptide_percent <- function(df, protein_class, aa_nums) {
+    peptides = c("G", "P", "A", "V", "L", "I", "M", "C", "F", "Y",
+                 "W", "H", "K", "R", "Q", "N", "E", "D", "S", "T")
+    for (row in seq(length(df))) {
+        # Column 22:422 - Calculate Dipeptide percent
+        l <- aa_nums
+        k = 1
+        for (i in 1:20) {
+            for (j in 1:20) {
+                dipep = paste(peptides[i], peptides[j], sep = "")
+                total_aa = nchar(df[1, k])
+                b = str_count(df[1, row], peptides[i]) / total_aa
+                l <- c(l, b)
+                k =+ 1
+            }
+        }
+        # Append vector of AA values
+        file_name = paste("dipeptide_class", protein_class, ".csv", sep = "")
+        write(aa_nums, file = file_name, append = TRUE, ncolumns = 422, sep = ",")
+    }
+}
+
+
+```
+
