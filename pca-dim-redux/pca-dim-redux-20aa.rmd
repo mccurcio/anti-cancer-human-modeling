@@ -1,0 +1,67 @@
+---
+title: "pca-dim-redux"
+author: "MCC"
+date: "8/29/2019"
+output: html_document
+---
+
+Title:
+
+Libraries  
+```{r message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE, cache.lazy = FALSE)
+
+Libraries = c("readr", "knitr", "seqinr", "stringr", "doMC")
+
+for(p in Libraries){ library(p, character.only = TRUE) }
+```
+
+FOR `doMC`
+
+1. registerDoMC(cores = 3) # Start multi-processor mode
+2. registerDOSEQ() # Stop multi-processor mode
+
+## Formulate your questions
+
+The purpose of the PCA is dimensionality reduction;
+
+Q1. Can the number of features be reduced using PCA?
+
+Import data
+```{r}
+cancer_human_comps <- read_csv("../1data/cancer_human_comps.csv",
+                               col_types = cols(Class = col_factor(levels = c("0","1")), 
+                                                PID = col_character()))
+#View(cancer_human_comps)
+```
+Warning message: Missing column names filled in: 'X244' [244] <- "NA"
+
+**NOTE: Column X244 should be marked "NA".  "NA" = Asparagine + Alanine**
+
+
+**Pricipal Components Analysis with princomp**
+
+PCA is very sensitive to large values and it is recommended that center and scaling or ranging be done. However the values are already {0 <= Values <= 1}
+```{r}
+#select the columns with the variables that you're conducting the PCA on
+pca.active <- cancer_human_comps[,4:23]
+
+fit_20aa <- princomp(pca.active, cor = TRUE) 
+names(fit_20aa)
+```
+```{r}
+fit_20aa
+```
+ 
+`cumsum(iPCA$sdev^2 / sum(iPCA$sdev^2))`
+`plot(cumsum(iPCA$sdev^2$ / sum(iPCA$sdev^2)), type="b")`
+```{r}
+plot(cumsum(fit_20aa$sdev^2 / sum(fit_20aa$sdev^2)),
+     ylim = c(0,1),
+     type = "b")
+```
+
+```{r}
+cumsum(fit_20aa$sdev^2 / sum(fit_20aa$sdev^2))
+```
+

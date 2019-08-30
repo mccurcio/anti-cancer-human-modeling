@@ -1,0 +1,11 @@
+base
+readr
+knitr
+seqinr
+stringr
+foreach
+iterators
+doMC
+ggplot2
+factoextra
+corrplot

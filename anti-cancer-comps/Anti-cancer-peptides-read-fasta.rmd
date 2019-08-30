@@ -67,7 +67,7 @@ is.character(peptide_names)
 Construct column names for files
 ```{r}
 create_col_names <- function(peptide_names){
-    info <- c("PID", "Class", "TotalAA")
+    info <- c("Class", "TotalAA", "PID")
     col_names <- c(info, peptide_names)
 }
 

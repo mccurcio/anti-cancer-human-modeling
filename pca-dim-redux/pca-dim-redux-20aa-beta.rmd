@@ -1,0 +1,43 @@
+---
+title: "pca-dim-redux"
+author: "MCC"
+date: "8/29/2019"
+output: html_document
+---
+
+Title:
+
+Libraries  
+```{r message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE, cache.lazy = FALSE)
+
+Libraries = c("readr", "knitr", "seqinr", "stringr", "doMC")
+
+for(p in Libraries){ library(p, character.only = TRUE) }
+```
+
+FOR `doMC`
+
+1. registerDoMC(cores = 3) # Start multi-processor mode
+2. registerDOSEQ() # Stop multi-processor mode
+
+## Formulate your questions
+
+The purpose of the PCA is dimensionality reduction;
+
+Q1. Can the number of features be reduced using PCA?
+
+Import data
+```{r}
+cancer_human_comps <- read_csv("../1data/cancer_human_comps.csv",
+                               col_types = cols(Class = col_factor(levels = c("0","1")), 
+                                                PID = col_character()))
+#View(cancer_human_comps)
+```
+Warning message: Missing column names filled in: 'X244' [244] <- "NA"
+
+**NOTE: Column X244 should be marked "NA".  "NA" = Asparagine + Alanine**
+
+
+**Pricipal Components Analysis with princomp**
+

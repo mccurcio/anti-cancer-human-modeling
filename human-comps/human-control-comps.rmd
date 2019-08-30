@@ -65,9 +65,9 @@ peptide_names <- create_peptide_names()
 is.character(peptide_names)
 ```
 Construct column names for files
-```{r}
+```{r eval=FALSE, include=FALSE}
 create_col_names <- function(peptide_names){
-    info <- c("PID", "Class", "TotalAA")
+    info <- c("Class", "TotalAA", "PID")
     col_names <- c(info, peptide_names)
 }
 
@@ -75,7 +75,7 @@ col_names <- create_col_names(peptide_names)
 is.character(col_names)
 ```
 Prepare csv file
-```{r}
+```{r eval=FALSE, include=FALSE}
 file_name = "human_ctrl_comps.csv"
 
 Prepare_csv_file <- function(file_name, col_names) {
