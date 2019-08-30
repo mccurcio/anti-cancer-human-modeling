@@ -1,0 +1,46 @@
+---
+title: "RelaImpo-Dim-Redux"
+author: "MCC"
+date: "8/30/2019"
+output: html_document
+---
+
+RelaImpo - Models for lm are specified symbolically. A typical model has the form response ~ terms **where response is the (numeric)** response vector and terms is a series of terms which specifies a linear predictor for response.
+
+Libraries  
+```{r message=FALSE, warning=FALSE}
+library(knitr)
+opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE, cache.lazy = FALSE)
+
+Libraries = c("doMC", "relaimpo", "readr")
+
+for(p in Libraries){  # Install if not present
+    if(!require(p, character.only = TRUE)) { install.packages(p, dependencies = T) }
+    library(p, character.only = TRUE)
+}
+# registerDoMC(cores = 3) # Start multi-processor mode
+# registerDoSEQ() # Stop multi-processor mode
+```
+
+Import data
+```{r}
+cancer_human_comps <- read_csv("../1data/cancer_human_comps.csv",
+                               col_types = cols(Class = col_factor(levels = c("0","1")), 
+                                                PID = col_character()))
+#View(cancer_human_comps)
+
+colnames(cancer_human_comps)[244] <- "NA" 
+
+cancer_human_Active <- cancer_human_comps[, c(1, 4:423)]
+```
+
+```{r}
+start_time <- Sys.time() # Start timer
+
+linear_model <- lm(Class ~ ., data = cancer_human_Active)
+
+Sys.time() - start_time  # Display time difference
+```
+
+
+

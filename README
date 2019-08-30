@@ -1,12 +1,15 @@
 This folder contains items for MCC's 'Anti-cancer peptide project'
 
-It contains:
+This project contains:
 
 - 1data - contains 2 x 905 proteins for anticancer-human modeling
 - anti-cancer-comps - script & .csv of anti-cancer AAC & DPC values
 - eda
 - human-comps - script & .csv of human-ctrl AAC & DPC values
 - misc-info - files of test scripts and misc.
-- ORIGINAL-DATA - .fasta files with anti-cancer peptides, and 20k human proteins for experimental control
+- ORIGINAL-DATA - .fasta.gz files with anti-cancer peptides & 20k human proteins for experimental control
+- pca-dim-redux
 
-- anti-cancer-peptides.Rproj - needed for RStudio
+- anti-cancer-human-modeling.Rproj - needed for RStudio
+- LICENSE
+- README

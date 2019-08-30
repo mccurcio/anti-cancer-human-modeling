@@ -1,0 +1,31 @@
+---
+title: '"NA" test'
+author: "MCC"
+date: "8/30/2019"
+output: html_document
+---
+
+Libraries  
+```{r message=FALSE, warning=FALSE}
+library(knitr)
+opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE, cache.lazy = FALSE)
+
+library(readr)
+```
+Import data & data handling
+Import data
+```{r}
+cancer_human_comps <- read_csv("../1data/cancer_human_comps.csv",
+                               col_types = cols(Class = col_factor(levels = c("0","1")), 
+                                                PID = col_character()))
+head(cancer_human_comps, n=2)
+```
+NOTE: Column X244 should be marked "NA".  "NA" = Asparagine + Alanine
+```{r}
+colnames(cancer_human_comps)[244] <- "NA" # This does not clear the issue.
+
+head(head(cancer_human_comps, n=2))
+```
+
+
+
