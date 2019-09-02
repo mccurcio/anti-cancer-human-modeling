@@ -1,0 +1,109 @@
+---
+title: "PCA-Dim-Redux"
+author: "MCC"
+date: "8/30/2019"
+output: html_document
+---
+
+Libraries  
+```{r message=FALSE, warning=FALSE}
+library(knitr)
+opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE, cache.lazy = FALSE)
+
+Libraries = c("doMC", "readr", "ggplot2")
+
+# Load Libraries
+for(p in Libraries){ library(p, character.only = TRUE) }
+
+# registerDoMC(cores = 3) # Start multi-processor mode
+# registerDoSEQ() # Stop multi-processor mode
+```
+
+Import data
+```{r message=FALSE, warning=FALSE}
+cancer_human_comps <- read_csv("../1data/cancer_human_comps.csv",
+                               col_types = cols(Class = col_factor(levels = c("0","1"))))
+#View(cancer_human_comps)
+#head(cancer_human_comps)
+
+colnames(cancer_human_comps)[244] <- "NA" 
+
+cancer_human_Active <- cancer_human_comps[, c(4:423)]
+```
+
+```{r}
+pca_info = prcomp(cancer_human_Active, rank. = 25) # rank. limits output to top 25 principle components
+
+#pca_info # Very large
+
+summary(pca_info)
+```
+
+```{r}
+names(pca_info)
+```
+```{r}
+str(pca_info)
+```
+
+```{r}
+plot(pca_info$sdev[1:40],
+     main = "Plot: Top 40 Std Dev From PCA Of Cancer_Human_Active",
+     ylab = "Standard Deviation",
+     xlab = "Component",
+     ylim = c(0, 0.06))
+```
+
+```{r message=FALSE, warning=FALSE}
+biplot(pca_info)
+```
+
+From the biplot the most easily visible components are: {A, R, AA, V, D, L, I, Y, M, E, K, N, Q, S, C, P, G}
+
+**NOTE:** It would be interesting to find the points which are PC2 > 0.06. This would be interesting to follow them along the modeling process and see if these are problems children.
+
+Genereate data.frame for PC1:3
+```{r}
+Class_0_1 <- cancer_human_comps$Class
+class_pc1_2_data <- as.data.frame(cbind(Class_0_1, pca_info$x[,1:3]))
+
+# head(class_pc1_2_data)
+tail(class_pc1_2_data)
+```
+Plot 'Class' vs 'PC1' and 'PC2' using principle component scores 
+```{r}
+ggplot(class_pc1_2_data, aes(PC1, PC2, col = Class_0_1, fill = Class_0_1)) + 
+    stat_ellipse(geom = "polygon", col = "black", alpha = 0.2) +
+    geom_point(shape = 21, col = "black")
+```
+Plot 'Class' vs 'PC1' and 'PC3' Scores
+```{r}
+ggplot(class_pc1_2_data, aes(PC1, PC3, col = Class_0_1, fill = Class_0_1)) + 
+    stat_ellipse(geom = "polygon", col = "black", alpha = 0.2) +
+    geom_point(shape = 21, col = "black")
+```
+Plot 'Class' vs 'PC2' and 'PC3' Scores
+```{r}
+ggplot(class_pc1_2_data, aes(PC2, PC3, col = Class_0_1, fill = Class_0_1)) + 
+    stat_ellipse(geom = "polygon", col = "black", alpha = 0.2) +
+    geom_point(shape = 21, col = "black")
+```
+
+Correlations between variables and principle components
+```{r}
+
+cancer_human_PC1scores <- as.data.frame(cbind(cancer_human_Active, pca_info$x[,1]))
+
+
+
+corr(cancer_human_PC1scores, cancer_human_PC1scores$792)
+```
+
+
+
+
+
+
+
+
+

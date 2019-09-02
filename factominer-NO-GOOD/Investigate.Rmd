@@ -1,0 +1,2341 @@
+---
+title: 'Principal Component Analysis'
+author: 'Dataset cancer_human_Active'
+output:
+  html_document: default
+---
+This dataset contains 1810 individuals and 420 variables.
+
+- - -
+
+```{r, echo = FALSE}
+library(FactoMineR)
+load('Workspace.RData')
+```
+### 1. Study of the outliers
+The analysis of the graphs leads to detect outliers that strongly influence the results. First we will describe these outliers and then we will suppress them from the analysis.
+Looking at the graph, we can note that 73 particular individuals strongly contribute to the construction of the plane. The cumulative contribution of these individuals to the construction of the plane equals **37.9%**.
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(memory, choix = 'ind', invisible = c('var', 'quali'), select = drawn, title = '', cex = cex)
+```
+
+**Figure 1.1 - Individuals factor map (PCA) before correction.** 
+*Highlighting of 73 outliers.* 
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, choix = 'ind', invisible = c('var', 'quali'), select = drawn, title = '', cex = cex)
+```
+
+**Figure 1.2 - Individuals factor map (PCA) after correction.** 
+*Highlighting of 73 outliers.* 
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(memory, choix = 'var', select = drawn, title = '', cex = cex)
+```
+
+**Figure 1.3 - Variables factor map (PCA) before correction**
+*The labeled variables are those the best shown on the plane.*
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, choix = 'var', select = drawn, title = '', cex = cex)
+```
+
+**Figure 1.3 - Variables factor map (PCA) after correction**
+
+- - -
+
+**The individual 27** :
+
+- takes very high values for the variable(s) :
+*VC*, *HK*, *CL*, *PC*, *AH*, *VL*, *PV*, *FT*, *FK* and *CN* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 28** :
+
+- takes very high values for the variable(s) :
+*LM*, *HK*, *SA*, *PC*, *AH*, *HL*, *FT*, *FK*, *LC* and *CN* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 32** :
+
+- takes very high values for the variable(s) :
+*HK*, *SA*, *PC*, *VL*, *PV*, *FT*, *FK*, *LC*, *AR* and *CN* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 33** :
+
+- takes very high values for the variable(s) :
+*VC*, *HK*, *CL*, *PC*, *VL*, *PV*, *FT*, *FK*, *CN* and *WE* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 34** :
+
+- takes very high values for the variable(s) :
+*HK*, *SA*, *PC*, *AH*, *HL*, *FT*, *FK*, *LG*, *LC* and *CN* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 35** :
+
+- takes very high values for the variable(s) :
+*VC*, *CL*, *PC*, *AH*, *LP*, *VL*, *PV*, *FT*, *FK* and *CN* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 36** :
+
+- takes very high values for the variable(s) :
+*HK*, *SA*, *PC*, *VL*, *PV*, *FT*, *FK*, *LC*, *AR* and *CN* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 37** :
+
+- takes very high values for the variable(s) :
+*VC*, *HK*, *PC*, *AH*, *VL*, *PV*, *FT*, *FK*, *CN* and *WE* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 38** :
+
+- takes very high values for the variable(s) :
+*VC*, *HK*, *SA*, *CL*, *PC*, *AH*, *VL*, *PV*, *FT* and *FK* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 39** :
+
+- takes very high values for the variable(s) :
+*SA*, *HK*, *PC*, *VF*, *VL*, *PV*, *FT*, *FK*, *LC* and *AR* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 40** :
+
+- takes very high values for the variable(s) :
+*HK*, *PC*, *VL*, *PV*, *FT*, *FK*, *LC*, *AR*, *CN* and *WE* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 41** :
+
+- takes very high values for the variable(s) :
+*SA*, *PC*, *RL*, *VF*, *CR*, *VL*, *FT*, *FK*, *LC* and *AR* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 42** :
+
+- takes very high values for the variable(s) :
+*SA*, *VC*, *HK*, *CL*, *PC*, *AH*, *VL*, *PV*, *FT* and *FK* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 43** :
+
+- takes very high values for the variable(s) :
+*PC*, *HK*, *SA*, *VF*, *RP*, *VL*, *FT*, *FK*, *AR* and *CN* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 44** :
+
+- takes very high values for the variable(s) :
+*VC*, *HN*, *SA*, *PC*, *VF*, *VL*, *PV*, *FT*, *FK* and *AR* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 45** :
+
+- takes very high values for the variable(s) :
+*HK*, *SA*, *PC*, *VL*, *PV*, *FT*, *FK*, *LC*, *CN* and *WE* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 46** :
+
+- takes very high values for the variable(s) :
+*SA*, *VC*, *HN*, *PC*, *VF*, *VL*, *PV*, *FT*, *FK* and *AR* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 47** :
+
+- takes very high values for the variable(s) :
+*VC*, *HK*, *SA*, *CL*, *PC*, *AH*, *VL*, *PV*, *FT* and *CN* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 48** :
+
+- takes very high values for the variable(s) :
+*HK*, *SA*, *PC*, *AH*, *HL*, *FT*, *FK*, *LG*, *LC* and *CN* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 49** :
+
+- takes very high values for the variable(s) :
+*VC*, *HK*, *SA*, *CL*, *PC*, *AH*, *VL*, *PV*, *FT* and *FK* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 50** :
+
+- takes very high values for the variable(s) :
+*VC*, *HK*, *CL*, *PC*, *AH*, *LP*, *VL*, *PV*, *FT* and *FK* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 51** :
+
+- takes very high values for the variable(s) :
+*FT*, *HK*, *SA*, *PC*, *VF*, *VL*, *PV*, *FK*, *LC* and *AR* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 52** :
+
+- takes very high values for the variable(s) :
+*VC*, *HK*, *SA*, *CL*, *PC*, *AH*, *VL*, *PV*, *FT* and *FK* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 53** :
+
+- takes very high values for the variable(s) :
+*VC*, *HK*, *SA*, *CL*, *PC*, *AH*, *VL*, *PV*, *FT* and *FK* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 54** :
+
+- takes very high values for the variable(s) :
+*HK*, *CL*, *PC*, *VL*, *PV*, *FT*, *FK*, *CN*, *WE* and *VC* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 55** :
+
+- takes very high values for the variable(s) :
+*VC*, *HK*, *SA*, *CL*, *PC*, *AH*, *VL*, *PV*, *FT* and *FK* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 56** :
+
+- takes very high values for the variable(s) :
+*LP*, *HK*, *PC*, *AH*, *EW*, *VF*, *FT*, *PL*, *LG* and *LC* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+*I*.
+
+**The individual 57** :
+
+- takes very high values for the variable(s) :
+*HK*, *SA*, *PC*, *AH*, *HL*, *FT*, *FK*, *LC*, *CN* and *WE* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 58** :
+
+- takes very high values for the variable(s) :
+*HK*, *SA*, *PC*, *AH*, *VL*, *FT*, *FK*, *CN*, *WE* and *VC* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 59** :
+
+- takes very high values for the variable(s) :
+*HK*, *SA*, *PC*, *VL*, *PV*, *FT*, *FK*, *LC*, *AR* and *CN* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 60** :
+
+- takes very high values for the variable(s) :
+*HK*, *SA*, *PC*, *AH*, *HL*, *FT*, *FK*, *LG*, *LC* and *CN* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 61** :
+
+- takes very high values for the variable(s) :
+*FT*, *HK*, *SA*, *PC*, *VL*, *PV*, *FK*, *LC*, *AR* and *CN* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 62** :
+
+- takes very high values for the variable(s) :
+*HK*, *SA*, *PC*, *PV*, *FT*, *FK*, *LC*, *AR*, *CN* and *WE* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 63** :
+
+- takes very high values for the variable(s) :
+*VC*, *HN*, *SA*, *PC*, *VL*, *PV*, *FT*, *FK*, *AR* and *CN* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 64** :
+
+- takes very high values for the variable(s) :
+*HK*, *PC*, *AH*, *MN*, *HL*, *FT*, *FK*, *LG*, *LC* and *CN* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 65** :
+
+- takes very high values for the variable(s) :
+*HK*, *SA*, *PC*, *VL*, *PV*, *FT*, *FK*, *LC*, *AR* and *CN* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 66** :
+
+- takes very high values for the variable(s) :
+*VC*, *HN*, *SA*, *PC*, *VL*, *PV*, *FT*, *FK*, *AR* and *CN* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 67** :
+
+- takes very high values for the variable(s) :
+*VC*, *HK*, *CL*, *PC*, *VL*, *PV*, *FT*, *FK*, *CN* and *WV* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 68** :
+
+- takes very high values for the variable(s) :
+*VC*, *HK*, *SA*, *CL*, *PC*, *AH*, *VL*, *PV*, *FT* and *FK* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 69** :
+
+- takes very high values for the variable(s) :
+*LP*, *HK*, *PC*, *AH*, *VF*, *FT*, *PL*, *LG*, *LC* and *CN* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+*I*.
+
+**The individual 70** :
+
+- takes very high values for the variable(s) :
+*HK*, *PC*, *AH*, *EW*, *LP*, *FT*, *FK*, *LG*, *LC* and *CN* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 71** :
+
+- takes very high values for the variable(s) :
+*HK*, *SA*, *AH*, *HL*, *FT*, *FK*, *LG*, *LC*, *CN* and *WE* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 72** :
+
+- takes very high values for the variable(s) :
+*SA*, *PC*, *AH*, *HL*, *FT*, *FK*, *LG*, *LC*, *CN* and *WE* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 73** :
+
+- takes very high values for the variable(s) :
+*VC*, *HK*, *CL*, *PC*, *VL*, *PV*, *FT*, *FK*, *CN* and *WE* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 86** :
+
+- takes very high values for the variable(s) :
+*VC*, *HK*, *CL*, *PC*, *VL*, *PV*, *FT*, *FK*, *CN* and *WE* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 87** :
+
+- takes very high values for the variable(s) :
+*LP*, *HK*, *PC*, *AH*, *EW*, *VF*, *FT*, *PL*, *LG* and *LC* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+*I*.
+
+**The individual 88** :
+
+- takes very high values for the variable(s) :
+*HK*, *SA*, *PC*, *AH*, *MN*, *VF*, *HL*, *FT*, *FK* and *LG* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 89** :
+
+- takes very high values for the variable(s) :
+*CM*, *MH*, *HK*, *SA*, *PC*, *AH*, *MN*, *VF*, *HL* and *FT* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 90** :
+
+- takes very high values for the variable(s) :
+*FT*, *HK*, *SA*, *PC*, *VF*, *VL*, *PV*, *FK*, *LC* and *CN* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 91** :
+
+- takes very high values for the variable(s) :
+*VC*, *PF*, *HK*, *SA*, *PC*, *AH*, *RP*, *VL*, *FT* and *FK* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 92** :
+
+- takes very high values for the variable(s) :
+*HK*, *SA*, *PC*, *AH*, *MN*, *HL*, *FT*, *FK*, *LG* and *LC* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 629** :
+
+- takes very high values for the variable(s) :
+*VC*, *HN*, *SA*, *PC*, *VF*, *VL*, *PV*, *FT*, *FK* and *AR* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 630** :
+
+- takes very high values for the variable(s) :
+*HK*, *PC*, *AH*, *EW*, *LP*, *FT*, *FK*, *LG*, *LC* and *CN* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 631** :
+
+- takes very high values for the variable(s) :
+*HK*, *SA*, *PC*, *VL*, *PV*, *FT*, *FK*, *LC*, *AR* and *CN* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 632** :
+
+- takes very high values for the variable(s) :
+*HK*, *SA*, *PC*, *AH*, *HL*, *FT*, *FK*, *LG*, *LC* and *CN* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 633** :
+
+- takes very high values for the variable(s) :
+*CV*, *LP*, *HK*, *PC*, *AH*, *EW*, *VF*, *FT*, *PL* and *LG* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+*I*.
+
+**The individual 634** :
+
+- takes very high values for the variable(s) :
+*LP*, *HK*, *PC*, *AH*, *EW*, *VF*, *FT*, *PL*, *LG* and *LC* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+*I*.
+
+**The individual 635** :
+
+- takes very high values for the variable(s) :
+*FT*, *HK*, *SA*, *PC*, *VF*, *VL*, *PV*, *FK*, *LC* and *AR* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 636** :
+
+- takes very high values for the variable(s) :
+*VC*, *HK*, *SA*, *CL*, *PC*, *AH*, *VL*, *PV*, *FT* and *FK* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 637** :
+
+- takes very high values for the variable(s) :
+*HK*, *PC*, *AH*, *MN*, *VF*, *HL*, *FT*, *FK*, *CF* and *LG* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 638** :
+
+- takes very high values for the variable(s) :
+*HK*, *SA*, *PC*, *AH*, *MN*, *VF*, *HL*, *FT*, *FK* and *LC* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 639** :
+
+- takes very high values for the variable(s) :
+*HK*, *PC*, *AH*, *EW*, *LP*, *FT*, *FK*, *LG*, *LC* and *CN* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 640** :
+
+- takes very high values for the variable(s) :
+*CM*, *CA*, *HK*, *YC*, *PC*, *AH*, *VF*, *FT*, *FK* and *LG* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 641** :
+
+- takes very high values for the variable(s) :
+*CA*, *HK*, *CL*, *PC*, *AH*, *FT*, *FK*, *LG*, *LC* and *CN* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 642** :
+
+- takes very high values for the variable(s) :
+*HK*, *SA*, *PC*, *VL*, *PV*, *FT*, *FK*, *LC*, *AR* and *CN* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 643** :
+
+- takes very high values for the variable(s) :
+*VC*, *HK*, *PC*, *AH*, *VL*, *PV*, *FT*, *FK*, *CN* and *WE* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 644** :
+
+- takes very high values for the variable(s) :
+*VC*, *HK*, *SA*, *CL*, *PC*, *AH*, *VL*, *PV*, *FT* and *CN* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 645** :
+
+- takes very high values for the variable(s) :
+*HK*, *SA*, *PC*, *AH*, *HL*, *FT*, *FK*, *LG*, *LC* and *CN* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 646** :
+
+- takes very high values for the variable(s) :
+*VC*, *HK*, *CL*, *PC*, *AH*, *LP*, *VL*, *PV*, *FT* and *FK* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 680** :
+
+- takes very high values for the variable(s) :
+*CA*, *HK*, *CL*, *PC*, *AH*, *FT*, *FK*, *LC*, *CN* and *FS* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+**The individual 1211** :
+
+- takes very high values for the variable(s) :
+*CQ*, *CC*, *QP*, *TC*, *C*, *SC*, *PC*, *CR*, *PT* and *CV* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+*L*, *D* and *E* (variables are sorted from the strongest).
+
+**The individual 1635** :
+
+- takes very high values for the variable(s) :
+*CC*, *CR*, *SC*, *TC*, *C*, *RP*, *CH*, *CQ*, *CY* and *CV* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+*L*, *D* and *F* (variables are sorted from the strongest).
+
+**The individual 1739** :
+
+- takes very high values for the variable(s) :
+*CC*, *CR*, *TC*, *CQ*, *SC*, *RP*, *C*, *CV*, *PS* and *QT* (variables are sorted from the strongest).
+
+- takes very low values for the variable(s) :
+*L*, *D*, *I*, *E* and *A* (variables are sorted from the strongest).
+
+These outliers are suppressed from the analysis and a second one is performed on the rest of the individuals.
+
+- - -
+
+### 2. Inertia distribution
+The inertia of the first dimensions shows if there are strong relationships between variables and suggests the number of dimensions that should be studied.
+
+The first two dimensions of analyse express **8%** of the total dataset inertia ; that means that 8% of the individuals (or variables) cloud total variability is explained by the plane.
+This is a very small percentage and the first plane represents a small part of the data variability.
+This value is greater than the reference value that equals **1.05%**, the variability explained by this plane is thus significant
+(the reference value is the 0.95-quantile of the inertia percentages distribution obtained by simulating 943 data tables of equivalent size on the basis of a normal distribution).
+
+From these observations, it is important to also interpret the dimensions greater or equal to the third one.
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+par(mar = c(2.6, 4.1, 1.1, 2.1))
+barplot(res$eig[,2], names.arg = 1:nrow(res$eig))
+```
+
+**Figure 2 - Decomposition of the total inertia on the components of the analyse**
+
+An estimation of the right number of axis to interpret suggests to restrict the analysis to the description of the first 55 axis.
+These axis present an amount of inertia greater than those obtained by the 0.95-quantile of random distributions (45.6% against 24.59%).
+This observation suggests that only these axis are carrying a real information.
+As a consequence, the description will stand to these axis.
+
+- - -
+
+### 3. Description of the plane 1:2
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 1:2, choix = 'ind', invisible = 'quali', title = '', cex = cex)
+```
+
+**Figure 3.1 - Individuals factor map (PCA)**
+*The labeled individuals are those with the higher contribution to the plane construction.*
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 1:2, choix = 'var', title = '', cex = cex)
+```
+
+**Figure 3.2 - Variables factor map (PCA)**
+*The labeled variables are those the best shown on the plane.*
+
+* * *
+
+The **dimension 1** opposes individuals characterized by a strongly positive coordinate on the axis (to the right of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the left of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *P*, *SP*, *PS*, *PP*, *SS*, *S*, *PT*, *GP*, *TS* and *QP* (variables are sorted from the strongest).
+- low values for variables like *I*, *D*, *F*, *IA*, *ID*, *RI*, *Y*, *IG*, *IE* and *V* (variables are sorted from the weakest).
+
+The group 2 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *K*, *N*, *KN*, *KE*, *KK*, *SK*, *NK*, *KQ*, *EN* and *LK* (variables are sorted from the strongest).
+- low values for variables like *A*, *G*, *AG*, *AA*, *GA*, *VA*, *AL*, *LA*, *PA* and *AR* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *A*, *AA*, *AD*, *LA*, *AG*, *DA*, *VA*, *AR*, *AL* and *IA* (variables are sorted from the strongest).
+- low values for variables like *S*, *K*, *N*, *SS*, *Q*, *EE*, *KE*, *SK*, *KK* and *KN* (variables are sorted from the weakest).
+
+
+* * *
+
+The **dimension 2** opposes individuals characterized by a strongly positive coordinate on the axis (to the top of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the bottom of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *A*, *AA*, *AD*, *LA*, *AG*, *DA*, *VA*, *AR*, *AL* and *IA* (variables are sorted from the strongest).
+- low values for variables like *S*, *K*, *N*, *SS*, *Q*, *EE*, *KE*, *SK*, *KK* and *KN* (variables are sorted from the weakest).
+
+The group 2 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *K*, *N*, *KN*, *KE*, *KK*, *SK*, *NK*, *KQ*, *EN* and *LK* (variables are sorted from the strongest).
+- low values for variables like *A*, *G*, *AG*, *AA*, *GA*, *VA*, *AL*, *LA*, *PA* and *AR* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *P*, *SP*, *PS*, *PP*, *SS*, *S*, *PT*, *GP*, *TS* and *QP* (variables are sorted from the strongest).
+- low values for variables like *I*, *D*, *F*, *IA*, *ID*, *RI*, *Y*, *IG*, *IE* and *V* (variables are sorted from the weakest).
+
+
+- - -
+
+### 4. Description of the plane 3:4
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 3:4, choix = 'ind', invisible = 'quali', title = '', cex = cex)
+```
+
+**Figure 4.1 - Individuals factor map (PCA)**
+*The labeled individuals are those with the higher contribution to the plane construction.*
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 3:4, choix = 'var', title = '', cex = cex)
+```
+
+**Figure 4.2 - Variables factor map (PCA)**
+*The labeled variables are those the best shown on the plane.*
+
+* * *
+
+The **dimension 3** opposes individuals characterized by a strongly positive coordinate on the axis (to the right of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the left of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *W*, *F*, *Y*, *C*, *LW*, *CF*, *YF*, *LC*, *FL* and *FF* (variables are sorted from the strongest).
+- low values for variables like *E*, *Q*, *DE*, *D*, *VK*, *K*, *QT*, *EI*, *ST* and *KL* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *T*, *TT*, *PT*, *TS*, *ST*, *TV*, *TA*, *TP*, *AT* and *IT* (variables are sorted from the strongest).
+- low values for variables like *R*, *LR*, *RE*, *ER*, *E*, *L*, *RR*, *RD*, *F* and *W* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *E*, *LE*, *EE*, *AE*, *RE*, *EA*, *EL*, *K*, *EQ* and *KE* (variables are sorted from the strongest).
+- low values for variables like *W*, *G*, *T*, *Y*, *GY*, *F*, *TF*, *FT*, *YT* and *GV* (variables are sorted from the weakest).
+
+
+* * *
+
+The **dimension 4** opposes individuals characterized by a strongly positive coordinate on the axis (to the top of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the bottom of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *T*, *TT*, *PT*, *TS*, *ST*, *TV*, *TA*, *TP*, *AT* and *IT* (variables are sorted from the strongest).
+- low values for variables like *R*, *LR*, *RE*, *ER*, *E*, *L*, *RR*, *RD*, *F* and *W* (variables are sorted from the weakest).
+
+The group 2 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *W*, *F*, *Y*, *C*, *LW*, *CF*, *YF*, *LC*, *FL* and *FF* (variables are sorted from the strongest).
+- low values for variables like *E*, *Q*, *DE*, *D*, *VK*, *K*, *QT*, *EI*, *ST* and *KL* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *E*, *LE*, *EE*, *AE*, *RE*, *EA*, *EL*, *K*, *EQ* and *KE* (variables are sorted from the strongest).
+- low values for variables like *W*, *G*, *T*, *Y*, *GY*, *F*, *TF*, *FT*, *YT* and *GV* (variables are sorted from the weakest).
+
+
+- - -
+
+### 5. Description of the plane 5:6
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 5:6, choix = 'ind', invisible = 'quali', title = '', cex = cex)
+```
+
+**Figure 5.1 - Individuals factor map (PCA)**
+*The labeled individuals are those with the higher contribution to the plane construction.*
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 5:6, choix = 'var', title = '', cex = cex)
+```
+
+**Figure 5.2 - Variables factor map (PCA)**
+*The labeled variables are those the best shown on the plane.*
+
+* * *
+
+The **dimension 5** opposes individuals characterized by a strongly positive coordinate on the axis (to the right of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the left of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *L*, *LL*, *LV*, *AL*, *IL*, *LA*, *VL*, *LS*, *LC* and *CL* (variables are sorted from the strongest).
+- low values for variables like *G*, *Y*, *YP*, *P*, *K*, *KG*, *D*, *PY*, *GE* and *YD* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *SC*, *CK*, *C*, *CT*, *CA*, *GC*, *CS*, *CC*, *KC* and *CG* (variables are sorted from the strongest).
+- low values for variables like *L*, *V*, *F*, *H*, *E*, *R*, *Y*, *D*, *I* and *W* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *Y*, *G*, *YP*, *P*, *D*, *GE*, *PY*, *YD*, *HG* and *YY* (variables are sorted from the strongest).
+- low values for variables like *L*, *LL*, *LV*, *AL*, *IL*, *LA*, *VL*, *LC*, *LS* and *CL* (variables are sorted from the weakest).
+
+
+* * *
+
+The **dimension 6** opposes individuals characterized by a strongly positive coordinate on the axis (to the top of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the bottom of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *Y*, *G*, *YP*, *P*, *D*, *GE*, *PY*, *YD*, *HG* and *YY* (variables are sorted from the strongest).
+- low values for variables like *L*, *LL*, *LV*, *AL*, *IL*, *LA*, *VL*, *LC*, *LS* and *CL* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *SC*, *CK*, *C*, *CT*, *CA*, *GC*, *CS*, *CC*, *KC* and *CG* (variables are sorted from the strongest).
+- low values for variables like *L*, *V*, *F*, *H*, *E*, *R*, *Y*, *D*, *I* and *W* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *L*, *LL*, *LV*, *AL*, *IL*, *LA*, *VL*, *LS*, *LC* and *CL* (variables are sorted from the strongest).
+- low values for variables like *G*, *Y*, *YP*, *P*, *K*, *KG*, *D*, *PY*, *GE* and *YD* (variables are sorted from the weakest).
+
+
+- - -
+
+### 6. Description of the plane 7:8
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 7:8, choix = 'ind', invisible = 'quali', title = '', cex = cex)
+```
+
+**Figure 6.1 - Individuals factor map (PCA)**
+*The labeled individuals are those with the higher contribution to the plane construction.*
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 7:8, choix = 'var', title = '', cex = cex)
+```
+
+**Figure 6.2 - Variables factor map (PCA)**
+*The labeled variables are those the best shown on the plane.*
+
+* * *
+
+The **dimension 7** opposes individuals characterized by a strongly positive coordinate on the axis (to the right of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the left of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *D*, *T*, *DD*, *TD*, *TT*, *TH*, *SD*, *ET*, *DQ* and *DA* (variables are sorted from the strongest).
+- low values for variables like *M*, *F*, *MG*, *K*, *FP*, *G*, *PM*, *KG*, *LF* and *FL* (variables are sorted from the weakest).
+
+The group 2 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *CF*, *FK*, *WC*, *LH*, *HM*, *WV*, *GW*, *NN*, *KW* and *QW* (variables are sorted from the strongest).
+- low values for variables like *SG*, *I*, *LG*, *LP*, *TL*, *AG*, *VV*, *SA*, *SV* and *TV* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *M*, *LF*, *F*, *GI*, *AM*, *G*, *KQ*, *MM*, *KG* and *MF* (variables are sorted from the strongest).
+- low values for variables like *D*, *DD*, *T*, *DL*, *TD*, *RT*, *DS*, *TR*, *TT* and *RY* (variables are sorted from the weakest).
+
+
+* * *
+
+The **dimension 8** opposes individuals characterized by a strongly positive coordinate on the axis (to the top of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the bottom of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *CF*, *FK*, *WC*, *LH*, *HM*, *WV*, *GW*, *NN*, *KW* and *QW* (variables are sorted from the strongest).
+- low values for variables like *SG*, *I*, *LG*, *LP*, *TL*, *AG*, *VV*, *SA*, *SV* and *TV* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *D*, *T*, *DD*, *TD*, *TT*, *TH*, *SD*, *ET*, *DQ* and *DA* (variables are sorted from the strongest).
+- low values for variables like *M*, *F*, *MG*, *K*, *FP*, *G*, *PM*, *KG*, *LF* and *FL* (variables are sorted from the weakest).
+
+
+- - -
+
+### 7. Description of the plane 9:10
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 9:10, choix = 'ind', invisible = 'quali', title = '', cex = cex)
+```
+
+**Figure 7.1 - Individuals factor map (PCA)**
+*The labeled individuals are those with the higher contribution to the plane construction.*
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 9:10, choix = 'var', title = '', cex = cex)
+```
+
+**Figure 7.2 - Variables factor map (PCA)**
+*The labeled variables are those the best shown on the plane.*
+
+* * *
+
+The **dimension 9** opposes individuals characterized by a strongly positive coordinate on the axis (to the right of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the left of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *H*, *TH*, *AH*, *HP*, *HD*, *CM*, *M*, *TT*, *HT* and *HR* (variables are sorted from the strongest).
+- low values for variables like *W*, *Q*, *LQ*, *AQ*, *GS*, *SY*, *EQ*, *QL*, *QE* and *LW* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *Y*, *W*, *SY*, *TW*, *RW*, *YY*, *YG*, *QS*, *RY* and *YQ* (variables are sorted from the strongest).
+- low values for variables like *H*, *IL*, *HP*, *LH*, *AH*, *HL*, *P*, *E*, *GE* and *HA* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *E*, *LE*, *L*, *EG*, *EE*, *QE*, *EV*, *LQ*, *FP* and *LH* (variables are sorted from the strongest).
+- low values for variables like *M*, *R*, *TH*, *QR*, *DR*, *Y*, *T*, *RR*, *RI* and *RF* (variables are sorted from the weakest).
+
+
+* * *
+
+The **dimension 10** opposes individuals characterized by a strongly positive coordinate on the axis (to the top of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the bottom of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *MR*, *RK*, *KR*, *KW*, *WR*, *RM*, *KM*, *RR*, *RQ* and *R* (variables are sorted from the strongest).
+- low values for the variables *V*, *D*, *E*, *G*, *F*, *I*, *P*, *T*, *L* and *N* (variables are sorted from the weakest).
+
+The group 2 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *Y*, *W*, *SY*, *TW*, *RW*, *YY*, *YG*, *QS*, *RY* and *YQ* (variables are sorted from the strongest).
+- low values for variables like *H*, *IL*, *HP*, *LH*, *AH*, *HL*, *P*, *E*, *GE* and *HA* (variables are sorted from the weakest).
+
+The group 3 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *H*, *TH*, *AH*, *HP*, *HD*, *CM*, *M*, *TT*, *HT* and *HR* (variables are sorted from the strongest).
+- low values for variables like *W*, *Q*, *LQ*, *AQ*, *GS*, *SY*, *EQ*, *QL*, *QE* and *LW* (variables are sorted from the weakest).
+
+The group 4 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *E*, *LE*, *L*, *EG*, *EE*, *QE*, *EV*, *LQ*, *FP* and *LH* (variables are sorted from the strongest).
+- low values for variables like *M*, *R*, *TH*, *QR*, *DR*, *Y*, *T*, *RR*, *RI* and *RF* (variables are sorted from the weakest).
+
+
+- - -
+
+### 8. Description of the plane 11:12
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 11:12, choix = 'ind', invisible = 'quali', title = '', cex = cex)
+```
+
+**Figure 8.1 - Individuals factor map (PCA)**
+*The labeled individuals are those with the higher contribution to the plane construction.*
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 11:12, choix = 'var', title = '', cex = cex)
+```
+
+**Figure 8.2 - Variables factor map (PCA)**
+*The labeled variables are those the best shown on the plane.*
+
+* * *
+
+The **dimension 11** opposes individuals characterized by a strongly positive coordinate on the axis (to the right of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the left of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *KA*, *A*, *AA*, *H*, *PY*, *AL*, *Y*, *AK*, *AF* and *TH* (variables are sorted from the strongest).
+- low values for variables like *S*, *I*, *NN*, *DS*, *N*, *SN*, *R*, *IV*, *SI* and *IS* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *W*, *KK*, *WI*, *K*, *PW*, *WF*, *EP*, *PK*, *KE* and *TW* (variables are sorted from the strongest).
+- low values for variables like *M*, *Q*, *AM*, *MT*, *AQ*, *N*, *QQ*, *QM*, *GM* and *QA* (variables are sorted from the weakest).
+
+
+* * *
+
+The **dimension 12** opposes individuals characterized by a strongly positive coordinate on the axis (to the top of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the bottom of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *NN*, *N*, *M*, *PM*, *Q*, *NS*, *IN*, *DR*, *NR* and *TN* (variables are sorted from the strongest).
+- low values for variables like *W*, *K*, *KA*, *WA*, *AK*, *KK*, *WL*, *LG*, *WF* and *WT* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *W*, *KK*, *WI*, *K*, *PW*, *WF*, *EP*, *PK*, *KE* and *TW* (variables are sorted from the strongest).
+- low values for variables like *M*, *Q*, *AM*, *MT*, *AQ*, *N*, *QQ*, *QM*, *GM* and *QA* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *KA*, *A*, *AA*, *H*, *PY*, *AL*, *Y*, *AK*, *AF* and *TH* (variables are sorted from the strongest).
+- low values for variables like *S*, *I*, *NN*, *DS*, *N*, *SN*, *R*, *IV*, *SI* and *IS* (variables are sorted from the weakest).
+
+
+- - -
+
+### 9. Description of the plane 13:14
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 13:14, choix = 'ind', invisible = 'quali', title = '', cex = cex)
+```
+
+**Figure 9.1 - Individuals factor map (PCA)**
+*The labeled individuals are those with the higher contribution to the plane construction.*
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 13:14, choix = 'var', title = '', cex = cex)
+```
+
+**Figure 9.2 - Variables factor map (PCA)**
+*The labeled variables are those the best shown on the plane.*
+
+* * *
+
+The **dimension 13** opposes individuals characterized by a strongly positive coordinate on the axis (to the right of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the left of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *V*, *GE*, *G*, *Q*, *VG*, *SG*, *QV*, *VE*, *GQ* and *QR* (variables are sorted from the strongest).
+- low values for variables like *P*, *PA*, *LP*, *AP*, *PL*, *DP*, *SP*, *PI*, *PS* and *PN* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *TY*, *TC*, *CE*, *EN*, *DT*, *NL*, *KT*, *AD*, *LA* and *T* (variables are sorted from the strongest).
+- low values for the variables *V*, *S*, *R*, *Q*, *I*, *F* and *G* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *P*, *PA*, *LP*, *AP*, *PL*, *DP*, *SP*, *PI*, *PS* and *PN* (variables are sorted from the strongest).
+- low values for variables like *V*, *GE*, *G*, *Q*, *VG*, *SG*, *QV*, *VE*, *GQ* and *QR* (variables are sorted from the weakest).
+
+
+* * *
+
+The **dimension 14** opposes individuals characterized by a strongly positive coordinate on the axis (to the top of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the bottom of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *P*, *PA*, *LP*, *AP*, *PL*, *DP*, *SP*, *PI*, *PS* and *PN* (variables are sorted from the strongest).
+- low values for variables like *V*, *GE*, *G*, *Q*, *VG*, *SG*, *QV*, *VE*, *GQ* and *QR* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *TY*, *TC*, *CE*, *EN*, *DT*, *NL*, *KT*, *AD*, *LA* and *T* (variables are sorted from the strongest).
+- low values for the variables *V*, *S*, *R*, *Q*, *I*, *F* and *G* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *V*, *GE*, *G*, *Q*, *VG*, *SG*, *QV*, *VE*, *GQ* and *QR* (variables are sorted from the strongest).
+- low values for variables like *P*, *PA*, *LP*, *AP*, *PL*, *DP*, *SP*, *PI*, *PS* and *PN* (variables are sorted from the weakest).
+
+
+- - -
+
+### 10. Description of the plane 15:16
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 15:16, choix = 'ind', invisible = 'quali', title = '', cex = cex)
+```
+
+**Figure 10.1 - Individuals factor map (PCA)**
+*The labeled individuals are those with the higher contribution to the plane construction.*
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 15:16, choix = 'var', title = '', cex = cex)
+```
+
+**Figure 10.2 - Variables factor map (PCA)**
+*The labeled variables are those the best shown on the plane.*
+
+* * *
+
+The **dimension 15** opposes individuals characterized by a strongly positive coordinate on the axis (to the right of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the left of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *V*, *VV*, *VI*, *N*, *AN*, *NV*, *I*, *VN*, *NA* and *NI* (variables are sorted from the strongest).
+- low values for variables like *F*, *EM*, *EL*, *GF*, *E*, *AF*, *FF*, *TF*, *EE* and *FL* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *GL*, *LS*, *S*, *GS*, *G*, *HG*, *WC*, *GG*, *FH* and *LH* (variables are sorted from the strongest).
+- low values for variables like *V*, *VQ*, *VV*, *TV*, *VI*, *RI*, *DV*, *PT*, *P* and *VK* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *EM*, *PT*, *T*, *TT*, *LY*, *F*, *EL*, *ST*, *ET* and *TF* (variables are sorted from the strongest).
+- low values for variables like *N*, *NA*, *AN*, *NN*, *V*, *NI*, *NS*, *VV*, *WS* and *VI* (variables are sorted from the weakest).
+
+
+* * *
+
+The **dimension 16** opposes individuals characterized by a strongly positive coordinate on the axis (to the top of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the bottom of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *EM*, *PT*, *T*, *TT*, *LY*, *F*, *EL*, *ST*, *ET* and *TF* (variables are sorted from the strongest).
+- low values for variables like *N*, *NA*, *AN*, *NN*, *V*, *NI*, *NS*, *VV*, *WS* and *VI* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *GL*, *LS*, *S*, *GS*, *G*, *HG*, *WC*, *GG*, *FH* and *LH* (variables are sorted from the strongest).
+- low values for variables like *V*, *VQ*, *VV*, *TV*, *VI*, *RI*, *DV*, *PT*, *P* and *VK* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *V*, *VV*, *VI*, *N*, *AN*, *NV*, *I*, *VN*, *NA* and *NI* (variables are sorted from the strongest).
+- low values for variables like *F*, *EM*, *EL*, *GF*, *E*, *AF*, *FF*, *TF*, *EE* and *FL* (variables are sorted from the weakest).
+
+
+- - -
+
+### 11. Description of the plane 17:18
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 17:18, choix = 'ind', invisible = 'quali', title = '', cex = cex)
+```
+
+**Figure 11.1 - Individuals factor map (PCA)**
+*The labeled individuals are those with the higher contribution to the plane construction.*
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 17:18, choix = 'var', title = '', cex = cex)
+```
+
+**Figure 11.2 - Variables factor map (PCA)**
+*The labeled variables are those the best shown on the plane.*
+
+* * *
+
+The **dimension 17** opposes individuals characterized by a strongly positive coordinate on the axis (to the right of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the left of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *HI*, *CD*, *FQ*, *DC*, *VC*, *YR*, *DH*, *EL*, *AY* and *NP* (variables are sorted from the strongest).
+- low values for the variables *S* and *T* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *D*, *LD*, *GD*, *DQ*, *DG*, *Q*, *DL*, *DR*, *DN* and *QQ* (variables are sorted from the strongest).
+- low values for variables like *V*, *Y*, *VV*, *E*, *EV*, *YS*, *PE*, *YY*, *AY* and *EY* (variables are sorted from the weakest).
+
+
+* * *
+
+The **dimension 18** opposes individuals characterized by a strongly positive coordinate on the axis (to the top of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the bottom of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *D*, *LD*, *GD*, *DQ*, *DG*, *Q*, *DL*, *DR*, *DN* and *QQ* (variables are sorted from the strongest).
+- low values for variables like *V*, *Y*, *VV*, *E*, *EV*, *YS*, *PE*, *YY*, *AY* and *EY* (variables are sorted from the weakest).
+
+The group 2 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *HI*, *CD*, *FQ*, *DC*, *VC*, *YR*, *DH*, *EL*, *AY* and *NP* (variables are sorted from the strongest).
+- low values for the variables *S* and *T* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *V*, *Y*, *VV*, *E*, *YS*, *PE*, *YY*, *EV*, *EY* and *SE* (variables are sorted from the strongest).
+- low values for variables like *D*, *LD*, *GD*, *DQ*, *DG*, *Q*, *DL*, *DR*, *DN* and *QQ* (variables are sorted from the weakest).
+
+
+- - -
+
+### 12. Description of the plane 19:20
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 19:20, choix = 'ind', invisible = 'quali', title = '', cex = cex)
+```
+
+**Figure 12.1 - Individuals factor map (PCA)**
+*The labeled individuals are those with the higher contribution to the plane construction.*
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 19:20, choix = 'var', title = '', cex = cex)
+```
+
+**Figure 12.2 - Variables factor map (PCA)**
+*The labeled variables are those the best shown on the plane.*
+
+* * *
+
+The **dimension 19** opposes individuals characterized by a strongly positive coordinate on the axis (to the right of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the left of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *I*, *IT*, *WI*, *EI*, *II*, *GI*, *IA*, *HQ*, *RI* and *IH* (variables are sorted from the strongest).
+- low values for variables like *V*, *HF*, *AS*, *N*, *GV*, *QV*, *VP*, *FK*, *SV* and *NA* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *V*, *DV*, *M*, *ML*, *SM*, *GH*, *VQ*, *SV*, *QV* and *D* (variables are sorted from the strongest).
+- low values for variables like *I*, *AI*, *RI*, *IA*, *AA*, *A*, *IY*, *RY*, *Y* and *YP* (variables are sorted from the weakest).
+
+
+* * *
+
+The **dimension 20** opposes individuals characterized by a strongly positive coordinate on the axis (to the top of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the bottom of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *V*, *DV*, *M*, *ML*, *SM*, *GH*, *VQ*, *SV*, *QV* and *D* (variables are sorted from the strongest).
+- low values for variables like *I*, *AI*, *RI*, *IA*, *AA*, *A*, *IY*, *RY*, *Y* and *YP* (variables are sorted from the weakest).
+
+The group 2 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *I*, *IT*, *WI*, *EI*, *II*, *GI*, *IA*, *HQ*, *RI* and *IH* (variables are sorted from the strongest).
+- low values for variables like *V*, *HF*, *AS*, *N*, *GV*, *QV*, *VP*, *FK*, *SV* and *NA* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *FK*, *Y*, *AA*, *YF*, *PA*, *NA*, *NY*, *YH*, *YA* and *GY* (variables are sorted from the strongest).
+- low values for variables like *M*, *HE*, *VM*, *SE*, *EW*, *DM*, *MM*, *ED*, *ME* and *MV* (variables are sorted from the weakest).
+
+
+- - -
+
+### 13. Description of the plane 21:22
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 21:22, choix = 'ind', invisible = 'quali', title = '', cex = cex)
+```
+
+**Figure 13.1 - Individuals factor map (PCA)**
+*The labeled individuals are those with the higher contribution to the plane construction.*
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 21:22, choix = 'var', title = '', cex = cex)
+```
+
+**Figure 13.2 - Variables factor map (PCA)**
+*The labeled variables are those the best shown on the plane.*
+
+* * *
+
+The **dimension 21** opposes individuals characterized by a strongly positive coordinate on the axis (to the right of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the left of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *CC*, *CQ*, *GC*, *CG*, *C*, *CP*, *SC*, *SG*, *PK* and *CR* (variables are sorted from the strongest).
+- low values for variables like *L*, *V*, *D*, *E*, *I*, *N*, *A*, *F*, *W* and *M* (variables are sorted from the weakest).
+
+The group 2 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *F*, *FF*, *V*, *VV*, *RF*, *FV*, *FA*, *VF*, *DF* and *FD* (variables are sorted from the strongest).
+- low values for variables like *L*, *Y*, *LL*, *GL*, *LY*, *LE*, *IL*, *YL*, *CR* and *YE* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *Y*, *YL*, *QY*, *IK*, *EI*, *HA*, *I*, *YY*, *YI* and *GY* (variables are sorted from the strongest).
+- low values for variables like *F*, *FQ*, *VS*, *TF*, *GF*, *FP*, *PF*, *FF*, *VV* and *VR* (variables are sorted from the weakest).
+
+The group 4 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *EC*, *CN*, *GL*, *GE*, *HT*, *PY*, *N*, *PG*, *TG* and *PN* (variables are sorted from the strongest).
+- low values for variables like *D*, *Y*, *F*, *DY*, *AD*, *FD*, *YD*, *RF*, *FF* and *DQ* (variables are sorted from the weakest).
+
+
+* * *
+
+The **dimension 22** opposes individuals characterized by a strongly positive coordinate on the axis (to the top of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the bottom of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *EC*, *CN*, *GL*, *GE*, *HT*, *PY*, *N*, *PG*, *TG* and *PN* (variables are sorted from the strongest).
+- low values for variables like *D*, *Y*, *F*, *DY*, *AD*, *FD*, *YD*, *RF*, *FF* and *DQ* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *CC*, *CQ*, *GC*, *CG*, *C*, *CP*, *SC*, *SG*, *PK* and *CR* (variables are sorted from the strongest).
+- low values for variables like *L*, *V*, *D*, *E*, *I*, *N*, *A*, *F*, *W* and *M* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *Y*, *YL*, *QY*, *IK*, *EI*, *HA*, *I*, *YY*, *YI* and *GY* (variables are sorted from the strongest).
+- low values for variables like *F*, *FQ*, *VS*, *TF*, *GF*, *FP*, *PF*, *FF*, *VV* and *VR* (variables are sorted from the weakest).
+
+The group 4 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *F*, *FF*, *V*, *VV*, *RF*, *FV*, *FA*, *VF*, *DF* and *FD* (variables are sorted from the strongest).
+- low values for variables like *L*, *Y*, *LL*, *GL*, *LY*, *LE*, *IL*, *YL*, *CR* and *YE* (variables are sorted from the weakest).
+
+
+- - -
+
+### 14. Description of the plane 23:24
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 23:24, choix = 'ind', invisible = 'quali', title = '', cex = cex)
+```
+
+**Figure 14.1 - Individuals factor map (PCA)**
+*The labeled individuals are those with the higher contribution to the plane construction.*
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 23:24, choix = 'var', title = '', cex = cex)
+```
+
+**Figure 14.2 - Variables factor map (PCA)**
+*The labeled variables are those the best shown on the plane.*
+
+* * *
+
+The **dimension 23** opposes individuals characterized by a strongly positive coordinate on the axis (to the right of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the left of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *Q*, *V*, *YQ*, *DV*, *QY*, *QL*, *Y*, *YH*, *H* and *VQ* (variables are sorted from the strongest).
+- low values for variables like *N*, *C*, *CR*, *CN*, *FE*, *AE*, *GN*, *NK*, *NG* and *KN* (variables are sorted from the weakest).
+
+The group 2 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *KR*, *CK*, *SC*, *RK*, *CA*, *CE*, *TC*, *LI*, *KC* and *DH* (variables are sorted from the strongest).
+- low values for variables like *V*, *P*, *AL*, *AV*, *SV*, *VV*, *GV*, *TA*, *PL* and *RV* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *N*, *NG*, *E*, *NR*, *WI*, *WG*, *W*, *VN*, *GG* and *FG* (variables are sorted from the strongest).
+- low values for variables like *D*, *Q*, *SD*, *QA*, *VQ*, *DV*, *SL*, *AQ*, *IP* and *FQ* (variables are sorted from the weakest).
+
+
+* * *
+
+The **dimension 24** opposes individuals characterized by a strongly positive coordinate on the axis (to the top of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the bottom of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *AC*, *CL*, *RC*, *CF*, *LC*, *FC*, *CR*, *CV*, *CW* and *MC* (variables are sorted from the strongest).
+- low values for variables like *EH*, *VE*, *V*, *QY*, *GV*, *VY*, *VG*, *AH*, *GD* and *LI* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *N*, *NG*, *E*, *NR*, *WI*, *WG*, *W*, *VN*, *GG* and *FG* (variables are sorted from the strongest).
+- low values for variables like *D*, *Q*, *SD*, *QA*, *VQ*, *DV*, *SL*, *AQ*, *IP* and *FQ* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *Q*, *V*, *YQ*, *DV*, *QY*, *QL*, *Y*, *YH*, *H* and *VQ* (variables are sorted from the strongest).
+- low values for variables like *N*, *C*, *CR*, *CN*, *FE*, *AE*, *GN*, *NK*, *NG* and *KN* (variables are sorted from the weakest).
+
+The group 4 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *KR*, *CK*, *SC*, *RK*, *CA*, *CE*, *TC*, *LI*, *KC* and *DH* (variables are sorted from the strongest).
+- low values for variables like *V*, *P*, *AL*, *AV*, *SV*, *VV*, *GV*, *TA*, *PL* and *RV* (variables are sorted from the weakest).
+
+
+- - -
+
+### 15. Description of the plane 25:26
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 25:26, choix = 'ind', invisible = 'quali', title = '', cex = cex)
+```
+
+**Figure 15.1 - Individuals factor map (PCA)**
+*The labeled individuals are those with the higher contribution to the plane construction.*
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 25:26, choix = 'var', title = '', cex = cex)
+```
+
+**Figure 15.2 - Variables factor map (PCA)**
+*The labeled variables are those the best shown on the plane.*
+
+* * *
+
+The **dimension 25** opposes individuals characterized by a strongly positive coordinate on the axis (to the right of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the left of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *AF*, *EC*, *HC*, *CK*, *CN*, *HT*, *CW*, *AC*, *HM* and *AE* (variables are sorted from the strongest).
+- low values for variables like *DL*, *LK*, *IL*, *LY*, *RL*, *VI*, *NP*, *ET*, *PT* and *II* (variables are sorted from the weakest).
+
+The group 2 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *HH*, *PW*, *W*, *MS*, *IE*, *QE*, *WN*, *KE*, *SK* and *AH* (variables are sorted from the strongest).
+- low values for variables like *LV*, *LL*, *IV*, *V*, *CM*, *HT*, *RD*, *DN*, *GE* and *ME* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *PT*, *V*, *VL*, *DL*, *LY*, *L*, *DV*, *LD*, *TT* and *IL* (variables are sorted from the strongest).
+- low values for variables like *EW*, *WN*, *HA*, *SA*, *EA*, *AF*, *W*, *H*, *EP* and *HH* (variables are sorted from the weakest).
+
+
+* * *
+
+The **dimension 26** opposes individuals characterized by a strongly positive coordinate on the axis (to the top of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the bottom of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *AF*, *EC*, *HC*, *CK*, *CN*, *HT*, *CW*, *AC*, *HM* and *AE* (variables are sorted from the strongest).
+- low values for variables like *DL*, *LK*, *IL*, *LY*, *RL*, *VI*, *NP*, *ET*, *PT* and *II* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *PT*, *V*, *VL*, *DL*, *LY*, *L*, *DV*, *LD*, *TT* and *IL* (variables are sorted from the strongest).
+- low values for variables like *EW*, *WN*, *HA*, *SA*, *EA*, *AF*, *W*, *H*, *EP* and *HH* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *HH*, *PW*, *W*, *MS*, *IE*, *QE*, *WN*, *KE*, *SK* and *AH* (variables are sorted from the strongest).
+- low values for variables like *LV*, *LL*, *IV*, *V*, *CM*, *HT*, *RD*, *DN*, *GE* and *ME* (variables are sorted from the weakest).
+
+
+- - -
+
+### 16. Description of the plane 27:28
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 27:28, choix = 'ind', invisible = 'quali', title = '', cex = cex)
+```
+
+**Figure 16.1 - Individuals factor map (PCA)**
+*The labeled individuals are those with the higher contribution to the plane construction.*
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 27:28, choix = 'var', title = '', cex = cex)
+```
+
+**Figure 16.2 - Variables factor map (PCA)**
+*The labeled variables are those the best shown on the plane.*
+
+* * *
+
+The **dimension 27** opposes individuals characterized by a strongly positive coordinate on the axis (to the right of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the left of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *CW*, *FI*, *FM*, *QF*, *FV*, *ET*, *YI*, *LG*, *FH* and *VF* (variables are sorted from the strongest).
+- low values for variables like *AW*, *SW*, *KD*, *SK*, *W*, *MP*, *WP*, *DL*, *WS* and *M* (variables are sorted from the weakest).
+
+The group 2 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *RF*, *EI*, *PI*, *PF*, *PG*, *TL*, *FR*, *GQ*, *NF* and *IT* (variables are sorted from the strongest).
+- low values for variables like *AL*, *KS*, *D*, *QN*, *DD*, *TD*, *DE*, *PY*, *RL* and *HR* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *KS*, *PY*, *MM*, *M*, *LD*, *KD*, *DI*, *AW*, *AM* and *D* (variables are sorted from the strongest).
+- low values for variables like *F*, *TL*, *IT*, *ET*, *T*, *IE*, *FL*, *FI*, *RF* and *GH* (variables are sorted from the weakest).
+
+
+* * *
+
+The **dimension 28** opposes individuals characterized by a strongly positive coordinate on the axis (to the top of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the bottom of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *KS*, *PY*, *MM*, *M*, *LD*, *KD*, *DI*, *AW*, *AM* and *D* (variables are sorted from the strongest).
+- low values for variables like *F*, *TL*, *IT*, *ET*, *T*, *IE*, *FL*, *FI*, *RF* and *GH* (variables are sorted from the weakest).
+
+The group 2 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *RF*, *EI*, *PI*, *PF*, *PG*, *TL*, *FR*, *GQ*, *NF* and *IT* (variables are sorted from the strongest).
+- low values for variables like *AL*, *KS*, *D*, *QN*, *DD*, *TD*, *DE*, *PY*, *RL* and *HR* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *CW*, *FI*, *FM*, *QF*, *FV*, *ET*, *YI*, *LG*, *FH* and *VF* (variables are sorted from the strongest).
+- low values for variables like *AW*, *SW*, *KD*, *SK*, *W*, *MP*, *WP*, *DL*, *WS* and *M* (variables are sorted from the weakest).
+
+
+- - -
+
+### 17. Description of the plane 29:30
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 29:30, choix = 'ind', invisible = 'quali', title = '', cex = cex)
+```
+
+**Figure 17.1 - Individuals factor map (PCA)**
+*The labeled individuals are those with the higher contribution to the plane construction.*
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 29:30, choix = 'var', title = '', cex = cex)
+```
+
+**Figure 17.2 - Variables factor map (PCA)**
+*The labeled variables are those the best shown on the plane.*
+
+* * *
+
+The **dimension 29** opposes individuals characterized by a strongly positive coordinate on the axis (to the right of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the left of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *VF*, *NE*, *PW*, *MD*, *FC*, *ED*, *TD*, *ND*, *D* and *YF* (variables are sorted from the strongest).
+- low values for variables like *SR*, *S*, *TK*, *RT*, *FK*, *NR*, *SS*, *YH*, *KD* and *VR* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *GH*, *QH*, *WH*, *WI*, *HG*, *IV*, *QV*, *SF*, *CS* and *PT* (variables are sorted from the strongest).
+- low values for variables like *TL*, *WY*, *YL*, *DP*, *MD*, *VT*, *TG*, *LR*, *MT* and *PV* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *RT*, *HK*, *FK*, *TF*, *RH*, *KL*, *LR*, *MH*, *YR* and *NK* (variables are sorted from the strongest).
+- low values for variables like *VF*, *IV*, *VG*, *DE*, *YF*, *ED*, *HG*, *FC*, *YW* and *QH* (variables are sorted from the weakest).
+
+
+* * *
+
+The **dimension 30** opposes individuals characterized by a strongly positive coordinate on the axis (to the top of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the bottom of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *GH*, *QH*, *WH*, *WI*, *HG*, *IV*, *QV*, *SF*, *CS* and *PT* (variables are sorted from the strongest).
+- low values for variables like *TL*, *WY*, *YL*, *DP*, *MD*, *VT*, *TG*, *LR*, *MT* and *PV* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *RT*, *HK*, *FK*, *TF*, *RH*, *KL*, *LR*, *MH*, *YR* and *NK* (variables are sorted from the strongest).
+- low values for variables like *VF*, *IV*, *VG*, *DE*, *YF*, *ED*, *HG*, *FC*, *YW* and *QH* (variables are sorted from the weakest).
+
+
+- - -
+
+### 18. Description of the plane 31:32
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 31:32, choix = 'ind', invisible = 'quali', title = '', cex = cex)
+```
+
+**Figure 18.1 - Individuals factor map (PCA)**
+*The labeled individuals are those with the higher contribution to the plane construction.*
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 31:32, choix = 'var', title = '', cex = cex)
+```
+
+**Figure 18.2 - Variables factor map (PCA)**
+*The labeled variables are those the best shown on the plane.*
+
+* * *
+
+The **dimension 31** opposes individuals characterized by a strongly positive coordinate on the axis (to the right of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the left of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *VN*, *IQ*, *PE*, *KI*, *KM*, *NF*, *MD*, *FS*, *SE* and *YI* (variables are sorted from the strongest).
+- low values for variables like *LP*, *VG*, *VQ*, *MA*, *RG*, *R*, *WG*, *GV*, *G* and *QV* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *QV*, *LP*, *VQ*, *GE*, *GL*, *IV*, *YT*, *LY*, *PD* and *FR* (variables are sorted from the strongest).
+- low values for variables like *MQ*, *IQ*, *LH*, *DF*, *VN*, *MD*, *SE*, *HS*, *PW* and *KH* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *PW*, *KH*, *RG*, *MQ*, *HL*, *SR*, *RC*, *RE*, *NC* and *GM* (variables are sorted from the strongest).
+- low values for variables like *GE*, *TW*, *PF*, *PD*, *LK*, *IV*, *KV*, *YT*, *ET* and *DC* (variables are sorted from the weakest).
+
+
+* * *
+
+The **dimension 32** opposes individuals characterized by a strongly positive coordinate on the axis (to the top of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the bottom of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *PW*, *KH*, *RG*, *MQ*, *HL*, *SR*, *RC*, *RE*, *NC* and *GM* (variables are sorted from the strongest).
+- low values for variables like *GE*, *TW*, *PF*, *PD*, *LK*, *IV*, *KV*, *YT*, *ET* and *DC* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *QV*, *LP*, *VQ*, *GE*, *GL*, *IV*, *YT*, *LY*, *PD* and *FR* (variables are sorted from the strongest).
+- low values for variables like *MQ*, *IQ*, *LH*, *DF*, *VN*, *MD*, *SE*, *HS*, *PW* and *KH* (variables are sorted from the weakest).
+
+
+- - -
+
+### 19. Description of the plane 33:34
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 33:34, choix = 'ind', invisible = 'quali', title = '', cex = cex)
+```
+
+**Figure 19.1 - Individuals factor map (PCA)**
+*The labeled individuals are those with the higher contribution to the plane construction.*
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 33:34, choix = 'var', title = '', cex = cex)
+```
+
+**Figure 19.2 - Variables factor map (PCA)**
+*The labeled variables are those the best shown on the plane.*
+
+* * *
+
+The **dimension 33** opposes individuals characterized by a strongly positive coordinate on the axis (to the right of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the left of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *QH*, *IE*, *PD*, *CM*, *TI*, *HG*, *VW*, *DM*, *SY* and *HW* (variables are sorted from the strongest).
+- low values for variables like *EP*, *WW*, *HK*, *HE*, *FP*, *SE*, *EG*, *GS*, *TF* and *PR* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *WW*, *TP*, *SP*, *DL*, *GS*, *VP*, *PH*, *PV*, *PR* and *VG* (variables are sorted from the strongest).
+- low values for variables like *TI*, *MK*, *IE*, *NI*, *HG*, *TK*, *LY*, *M*, *VY* and *WY* (variables are sorted from the weakest).
+
+
+* * *
+
+The **dimension 34** opposes individuals characterized by a strongly positive coordinate on the axis (to the top of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the bottom of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *WW*, *TP*, *SP*, *DL*, *GS*, *VP*, *PH*, *PV*, *PR* and *VG* (variables are sorted from the strongest).
+- low values for variables like *TI*, *MK*, *IE*, *NI*, *HG*, *TK*, *LY*, *M*, *VY* and *WY* (variables are sorted from the weakest).
+
+The group 2 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *QH*, *IE*, *PD*, *CM*, *TI*, *HG*, *VW*, *DM*, *SY* and *HW* (variables are sorted from the strongest).
+- low values for variables like *EP*, *WW*, *HK*, *HE*, *FP*, *SE*, *EG*, *GS*, *TF* and *PR* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *YF*, *TK*, *GN*, *YM*, *VH*, *VT*, *IY*, *NG*, *YE* and *MI* (variables are sorted from the strongest).
+- low values for variables like *SP*, *DL*, *ES*, *LK*, *IP*, *VK*, *QH*, *YP*, *WN* and *PD* (variables are sorted from the weakest).
+
+
+- - -
+
+### 20. Description of the plane 35:36
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 35:36, choix = 'ind', invisible = 'quali', title = '', cex = cex)
+```
+
+**Figure 20.1 - Individuals factor map (PCA)**
+*The labeled individuals are those with the higher contribution to the plane construction.*
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 35:36, choix = 'var', title = '', cex = cex)
+```
+
+**Figure 20.2 - Variables factor map (PCA)**
+*The labeled variables are those the best shown on the plane.*
+
+* * *
+
+The **dimension 35** opposes individuals characterized by a strongly positive coordinate on the axis (to the right of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the left of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *V*, *PV*, *DP*, *VD*, *MH*, *QT*, *DN*, *MD*, *VV* and *LV* (variables are sorted from the strongest).
+- low values for variables like *WT*, *VW*, *FA*, *LF*, *WD*, *II*, *AS*, *LW*, *WM* and *FW* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *VM*, *TL*, *SG*, *LF*, *NF*, *WQ*, *AC*, *WT*, *PK* and *HH* (variables are sorted from the strongest).
+- low values for variables like *YR*, *MH*, *DN*, *SF*, *SM*, *MD*, *RI*, *VH*, *AQ* and *PF* (variables are sorted from the weakest).
+
+
+* * *
+
+The **dimension 36** opposes individuals characterized by a strongly positive coordinate on the axis (to the top of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the bottom of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *AS*, *LQ*, *DI*, *VW*, *II*, *QL*, *WD*, *GT*, *QM* and *FA* (variables are sorted from the strongest).
+- low values for variables like *VS*, *VD*, *VV*, *V*, *VM*, *PI*, *WH*, *PR*, *KP* and *HQ* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *V*, *PV*, *DP*, *VD*, *MH*, *QT*, *DN*, *MD*, *VV* and *LV* (variables are sorted from the strongest).
+- low values for variables like *WT*, *VW*, *FA*, *LF*, *WD*, *II*, *AS*, *LW*, *WM* and *FW* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *VM*, *TL*, *SG*, *LF*, *NF*, *WQ*, *AC*, *WT*, *PK* and *HH* (variables are sorted from the strongest).
+- low values for variables like *YR*, *MH*, *DN*, *SF*, *SM*, *MD*, *RI*, *VH*, *AQ* and *PF* (variables are sorted from the weakest).
+
+
+- - -
+
+### 21. Description of the plane 37:38
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 37:38, choix = 'ind', invisible = 'quali', title = '', cex = cex)
+```
+
+**Figure 21.1 - Individuals factor map (PCA)**
+*The labeled individuals are those with the higher contribution to the plane construction.*
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 37:38, choix = 'var', title = '', cex = cex)
+```
+
+**Figure 21.2 - Variables factor map (PCA)**
+*The labeled variables are those the best shown on the plane.*
+
+* * *
+
+The **dimension 37** opposes individuals characterized by a strongly positive coordinate on the axis (to the right of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the left of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *NS*, *VT*, *WH*, *SA*, *FF*, *TG*, *YQ*, *WF*, *AF* and *DG* (variables are sorted from the strongest).
+- low values for variables like *YL*, *AK*, *WD*, *MP*, *QR*, *SD*, *IM*, *RD*, *DM* and *QV* (variables are sorted from the weakest).
+
+The group 2 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *GI*, *MP*, *QD*, *KV*, *NW*, *IH*, *KA*, *DE*, *IM* and *IW* (variables are sorted from the strongest).
+- low values for variables like *FQ*, *ML*, *AF*, *TE*, *WF*, *VT*, *MV*, *VG*, *WH* and *EQ* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *WD*, *FQ*, *DM*, *YM*, *KP*, *ML*, *CV*, *RH*, *EQ* and *HK* (variables are sorted from the strongest).
+- low values for variables like *QD*, *KV*, *TG*, *NG*, *NW*, *GI*, *IG*, *RQ*, *GS* and *SP* (variables are sorted from the weakest).
+
+
+* * *
+
+The **dimension 38** opposes individuals characterized by a strongly positive coordinate on the axis (to the top of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the bottom of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *NS*, *VT*, *WH*, *SA*, *FF*, *TG*, *YQ*, *WF*, *AF* and *DG* (variables are sorted from the strongest).
+- low values for variables like *YL*, *AK*, *WD*, *MP*, *QR*, *SD*, *IM*, *RD*, *DM* and *QV* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *GI*, *MP*, *QD*, *KV*, *NW*, *IH*, *KA*, *DE*, *IM* and *IW* (variables are sorted from the strongest).
+- low values for variables like *FQ*, *ML*, *AF*, *TE*, *WF*, *VT*, *MV*, *VG*, *WH* and *EQ* (variables are sorted from the weakest).
+
+
+- - -
+
+### 22. Description of the plane 39:40
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 39:40, choix = 'ind', invisible = 'quali', title = '', cex = cex)
+```
+
+**Figure 22.1 - Individuals factor map (PCA)**
+*The labeled individuals are those with the higher contribution to the plane construction.*
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 39:40, choix = 'var', title = '', cex = cex)
+```
+
+**Figure 22.2 - Variables factor map (PCA)**
+*The labeled variables are those the best shown on the plane.*
+
+* * *
+
+The **dimension 39** opposes individuals characterized by a strongly positive coordinate on the axis (to the right of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the left of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *WF*, *FE*, *FP*, *SY*, *QA*, *QD*, *FH*, *DI*, *TV* and *VS* (variables are sorted from the strongest).
+- low values for variables like *EM*, *MP*, *WE*, *RF*, *HI*, *EW*, *ME*, *SI*, *IC* and *TL* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *RF*, *SD*, *EA*, *WA*, *AN*, *HM*, *IY*, *IR*, *SI* and *WI* (variables are sorted from the strongest).
+- low values for variables like *FT*, *DI*, *SY*, *IP*, *NM*, *PK*, *IN*, *PH*, *QL* and *GW* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *EM*, *IC*, *HI*, *EH*, *MP*, *QK*, *NM*, *NT*, *RL* and *SN* (variables are sorted from the strongest).
+- low values for variables like *NG*, *IR*, *CH*, *FE*, *WF*, *MV*, *LN*, *QT*, *YL* and *VM* (variables are sorted from the weakest).
+
+
+* * *
+
+The **dimension 40** opposes individuals characterized by a strongly positive coordinate on the axis (to the top of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the bottom of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *EM*, *IC*, *HI*, *EH*, *MP*, *QK*, *NM*, *NT*, *RL* and *SN* (variables are sorted from the strongest).
+- low values for variables like *NG*, *IR*, *CH*, *FE*, *WF*, *MV*, *LN*, *QT*, *YL* and *VM* (variables are sorted from the weakest).
+
+The group 2 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *WF*, *FE*, *FP*, *SY*, *QA*, *QD*, *FH*, *DI*, *TV* and *VS* (variables are sorted from the strongest).
+- low values for variables like *EM*, *MP*, *WE*, *RF*, *HI*, *EW*, *ME*, *SI*, *IC* and *TL* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *RF*, *SD*, *EA*, *WA*, *AN*, *HM*, *IY*, *IR*, *SI* and *WI* (variables are sorted from the strongest).
+- low values for variables like *FT*, *DI*, *SY*, *IP*, *NM*, *PK*, *IN*, *PH*, *QL* and *GW* (variables are sorted from the weakest).
+
+
+- - -
+
+### 23. Description of the plane 41:42
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 41:42, choix = 'ind', invisible = 'quali', title = '', cex = cex)
+```
+
+**Figure 23.1 - Individuals factor map (PCA)**
+*The labeled individuals are those with the higher contribution to the plane construction.*
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 41:42, choix = 'var', title = '', cex = cex)
+```
+
+**Figure 23.2 - Variables factor map (PCA)**
+*The labeled variables are those the best shown on the plane.*
+
+* * *
+
+The **dimension 41** opposes individuals characterized by a strongly positive coordinate on the axis (to the right of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the left of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *EY*, *ES*, *QF*, *WD*, *HF*, *CD*, *SH*, *HL*, *YQ* and *RF* (variables are sorted from the strongest).
+- low values for variables like *PI*, *PL*, *NA*, *TV*, *SK*, *LG*, *DV*, *IT*, *FW* and *DM* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *PI*, *PN*, *YF*, *FD*, *DM*, *FR*, *EG*, *HV*, *SQ* and *EC* (variables are sorted from the strongest).
+- low values for variables like *ER*, *VK*, *DY*, *EY*, *YN*, *YP*, *DW*, *SW*, *GR* and *NE* (variables are sorted from the weakest).
+
+
+* * *
+
+The **dimension 42** opposes individuals characterized by a strongly positive coordinate on the axis (to the top of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the bottom of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *PI*, *PN*, *YF*, *FD*, *DM*, *FR*, *EG*, *HV*, *SQ* and *EC* (variables are sorted from the strongest).
+- low values for variables like *ER*, *VK*, *DY*, *EY*, *YN*, *YP*, *DW*, *SW*, *GR* and *NE* (variables are sorted from the weakest).
+
+The group 2 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *EY*, *ES*, *QF*, *WD*, *HF*, *CD*, *SH*, *HL*, *YQ* and *RF* (variables are sorted from the strongest).
+- low values for variables like *PI*, *PL*, *NA*, *TV*, *SK*, *LG*, *DV*, *IT*, *FW* and *DM* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *WG*, *VT*, *WN*, *FP*, *RW*, *AW*, *LL*, *NW*, *NQ* and *LT* (variables are sorted from the strongest).
+- low values for variables like *QF*, *FD*, *ES*, *FA*, *WD*, *RF*, *GK*, *HE*, *MI* and *YW* (variables are sorted from the weakest).
+
+
+- - -
+
+### 24. Description of the plane 43:44
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 43:44, choix = 'ind', invisible = 'quali', title = '', cex = cex)
+```
+
+**Figure 24.1 - Individuals factor map (PCA)**
+*The labeled individuals are those with the higher contribution to the plane construction.*
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 43:44, choix = 'var', title = '', cex = cex)
+```
+
+**Figure 24.2 - Variables factor map (PCA)**
+*The labeled variables are those the best shown on the plane.*
+
+* * *
+
+The **dimension 43** opposes individuals characterized by a strongly positive coordinate on the axis (to the right of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the left of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *PN*, *DS*, *QF*, *TP*, *CM*, *RN*, *DP*, *DI*, *YQ* and *PC* (variables are sorted from the strongest).
+- low values for variables like *DN*, *WA*, *AY*, *SM*, *GV*, *AK*, *DW*, *QR*, *KV* and *FD* (variables are sorted from the weakest).
+
+The group 2 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *FV*, *WA*, *QY*, *GK*, *WG*, *SM*, *TW*, *NW*, *YK* and *PR* (variables are sorted from the strongest).
+- low values for variables like *QA*, *PF*, *PN*, *NP*, *QV*, *AM*, *CP*, *IH*, *SV* and *RN* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *FD*, *YA*, *DM*, *ND*, *FG*, *PF*, *VN*, *DQ*, *FS* and *DN* (variables are sorted from the strongest).
+- low values for variables like *QY*, *QF*, *IW*, *DS*, *QH*, *IP*, *YN*, *FV*, *CV* and *CQ* (variables are sorted from the weakest).
+
+
+* * *
+
+The **dimension 44** opposes individuals characterized by a strongly positive coordinate on the axis (to the top of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the bottom of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *FD*, *YA*, *DM*, *ND*, *FG*, *PF*, *VN*, *DQ*, *FS* and *DN* (variables are sorted from the strongest).
+- low values for variables like *QY*, *QF*, *IW*, *DS*, *QH*, *IP*, *YN*, *FV*, *CV* and *CQ* (variables are sorted from the weakest).
+
+The group 2 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *FV*, *WA*, *QY*, *GK*, *WG*, *SM*, *TW*, *NW*, *YK* and *PR* (variables are sorted from the strongest).
+- low values for variables like *QA*, *PF*, *PN*, *NP*, *QV*, *AM*, *CP*, *IH*, *SV* and *RN* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *PN*, *DS*, *QF*, *TP*, *CM*, *RN*, *DP*, *DI*, *YQ* and *PC* (variables are sorted from the strongest).
+- low values for variables like *DN*, *WA*, *AY*, *SM*, *GV*, *AK*, *DW*, *QR*, *KV* and *FD* (variables are sorted from the weakest).
+
+
+- - -
+
+### 25. Description of the plane 45:46
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 45:46, choix = 'ind', invisible = 'quali', title = '', cex = cex)
+```
+
+**Figure 25.1 - Individuals factor map (PCA)**
+*The labeled individuals are those with the higher contribution to the plane construction.*
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 45:46, choix = 'var', title = '', cex = cex)
+```
+
+**Figure 25.2 - Variables factor map (PCA)**
+*The labeled variables are those the best shown on the plane.*
+
+* * *
+
+The **dimension 45** opposes individuals characterized by a strongly positive coordinate on the axis (to the right of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the left of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *YR*, *IE*, *FE*, *GH*, *WM*, *RY*, *HH*, *CY*, *NM* and *HR* (variables are sorted from the strongest).
+- low values for variables like *YW*, *KG*, *CM*, *LP*, *CL*, *MG*, *EW*, *SA*, *SN* and *TL* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *NV*, *YP*, *KY*, *LM*, *CL*, *FQ*, *AH*, *EW*, *FT* and *YW* (variables are sorted from the strongest).
+- low values for variables like *IE*, *CY*, *MC*, *LW*, *MD*, *LD*, *VA*, *PM*, *ME* and *WM* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *PM*, *MC*, *ME*, *FA*, *NI*, *NR*, *PL*, *CV*, *AS* and *NH* (variables are sorted from the strongest).
+- low values for variables like *NV*, *MK*, *FQ*, *LR*, *TA*, *TY*, *LM*, *YP*, *AH* and *FT* (variables are sorted from the weakest).
+
+
+* * *
+
+The **dimension 46** opposes individuals characterized by a strongly positive coordinate on the axis (to the top of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the bottom of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *PM*, *MC*, *ME*, *FA*, *NI*, *NR*, *PL*, *CV*, *AS* and *NH* (variables are sorted from the strongest).
+- low values for variables like *NV*, *MK*, *FQ*, *LR*, *TA*, *TY*, *LM*, *YP*, *AH* and *FT* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *NV*, *YP*, *KY*, *LM*, *CL*, *FQ*, *AH*, *EW*, *FT* and *YW* (variables are sorted from the strongest).
+- low values for variables like *IE*, *CY*, *MC*, *LW*, *MD*, *LD*, *VA*, *PM*, *ME* and *WM* (variables are sorted from the weakest).
+
+
+- - -
+
+### 26. Description of the plane 47:48
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 47:48, choix = 'ind', invisible = 'quali', title = '', cex = cex)
+```
+
+**Figure 26.1 - Individuals factor map (PCA)**
+*The labeled individuals are those with the higher contribution to the plane construction.*
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 47:48, choix = 'var', title = '', cex = cex)
+```
+
+**Figure 26.2 - Variables factor map (PCA)**
+*The labeled variables are those the best shown on the plane.*
+
+* * *
+
+The **dimension 47** opposes individuals characterized by a strongly positive coordinate on the axis (to the right of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the left of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *YH*, *RF*, *QR*, *YR*, *PT*, *WY*, *NF*, *RC*, *TT* and *SN* (variables are sorted from the strongest).
+- low values for variables like *SY*, *TN*, *MI*, *IS*, *DA*, *TW*, *VS*, *YP*, *EV* and *YV* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *YE*, *SY*, *HI*, *WT*, *VS*, *IS*, *YV*, *QN*, *VP* and *EH* (variables are sorted from the strongest).
+- low values for variables like *WI*, *QR*, *RF*, *YI*, *YR*, *VL*, *GW*, *VW*, *CA* and *IV* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *YK*, *RH*, *FN*, *IR*, *PM*, *NM*, *WI*, *MI*, *IC* and *YI* (variables are sorted from the strongest).
+- low values for variables like *DI*, *KP*, *LY*, *SQ*, *FL*, *YH*, *SN*, *IW*, *NY* and *MP* (variables are sorted from the weakest).
+
+
+* * *
+
+The **dimension 48** opposes individuals characterized by a strongly positive coordinate on the axis (to the top of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the bottom of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *YH*, *RF*, *QR*, *YR*, *PT*, *WY*, *NF*, *RC*, *TT* and *SN* (variables are sorted from the strongest).
+- low values for variables like *SY*, *TN*, *MI*, *IS*, *DA*, *TW*, *VS*, *YP*, *EV* and *YV* (variables are sorted from the weakest).
+
+The group 2 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *YK*, *RH*, *FN*, *IR*, *PM*, *NM*, *WI*, *MI*, *IC* and *YI* (variables are sorted from the strongest).
+- low values for variables like *DI*, *KP*, *LY*, *SQ*, *FL*, *YH*, *SN*, *IW*, *NY* and *MP* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *YE*, *SY*, *HI*, *WT*, *VS*, *IS*, *YV*, *QN*, *VP* and *EH* (variables are sorted from the strongest).
+- low values for variables like *WI*, *QR*, *RF*, *YI*, *YR*, *VL*, *GW*, *VW*, *CA* and *IV* (variables are sorted from the weakest).
+
+
+- - -
+
+### 27. Description of the plane 49:50
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 49:50, choix = 'ind', invisible = 'quali', title = '', cex = cex)
+```
+
+**Figure 27.1 - Individuals factor map (PCA)**
+*The labeled individuals are those with the higher contribution to the plane construction.*
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 49:50, choix = 'var', title = '', cex = cex)
+```
+
+**Figure 27.2 - Variables factor map (PCA)**
+*The labeled variables are those the best shown on the plane.*
+
+* * *
+
+The **dimension 49** opposes individuals characterized by a strongly positive coordinate on the axis (to the right of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the left of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *YP*, *RG*, *NA*, *FY*, *MF*, *NF*, *IW*, *ML*, *VD* and *LM* (variables are sorted from the strongest).
+- low values for variables like *MV*, *KI*, *DY*, *FS*, *WD*, *VM*, *EW*, *EM*, *FE* and *QK* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *FE*, *EM*, *SA*, *HG*, *DY*, *VM*, *AH*, *GN*, *FK* and *SL* (variables are sorted from the strongest).
+- low values for variables like *FY*, *YA*, *QY*, *NA*, *AI*, *EQ*, *PE*, *ML*, *WI* and *NS* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *EW*, *HR*, *AY*, *NV*, *TI*, *AI*, *YT*, *YA*, *ID* and *WS* (variables are sorted from the strongest).
+- low values for variables like *QT*, *KN*, *LM*, *RC*, *HE*, *QF*, *RG*, *VD*, *HV* and *CY* (variables are sorted from the weakest).
+
+
+* * *
+
+The **dimension 50** opposes individuals characterized by a strongly positive coordinate on the axis (to the top of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the bottom of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *FE*, *EM*, *SA*, *HG*, *DY*, *VM*, *AH*, *GN*, *FK* and *SL* (variables are sorted from the strongest).
+- low values for variables like *FY*, *YA*, *QY*, *NA*, *AI*, *EQ*, *PE*, *ML*, *WI* and *NS* (variables are sorted from the weakest).
+
+The group 2 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *YP*, *RG*, *NA*, *FY*, *MF*, *NF*, *IW*, *ML*, *VD* and *LM* (variables are sorted from the strongest).
+- low values for variables like *MV*, *KI*, *DY*, *FS*, *WD*, *VM*, *EW*, *EM*, *FE* and *QK* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *EW*, *HR*, *AY*, *NV*, *TI*, *AI*, *YT*, *YA*, *ID* and *WS* (variables are sorted from the strongest).
+- low values for variables like *QT*, *KN*, *LM*, *RC*, *HE*, *QF*, *RG*, *VD*, *HV* and *CY* (variables are sorted from the weakest).
+
+
+- - -
+
+### 28. Description of the plane 51:52
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 51:52, choix = 'ind', invisible = 'quali', title = '', cex = cex)
+```
+
+**Figure 28.1 - Individuals factor map (PCA)**
+*The labeled individuals are those with the higher contribution to the plane construction.*
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 51:52, choix = 'var', title = '', cex = cex)
+```
+
+**Figure 28.2 - Variables factor map (PCA)**
+*The labeled variables are those the best shown on the plane.*
+
+* * *
+
+The **dimension 51** opposes individuals characterized by a strongly positive coordinate on the axis (to the right of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the left of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *DP*, *LD*, *ID*, *HD*, *EP*, *HF*, *PR*, *VM*, *IS* and *QF* (variables are sorted from the strongest).
+- low values for variables like *NE*, *DY*, *IP*, *NQ*, *WY*, *AT*, *YR*, *ER*, *ED* and *QT* (variables are sorted from the weakest).
+
+The group 2 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *PW*, *WQ*, *DN*, *WM*, *MS*, *SR*, *PI*, *IH*, *VC* and *CG* (variables are sorted from the strongest).
+- low values for variables like *FT*, *YR*, *VM*, *EH*, *AR*, *PH*, *ST*, *SD*, *LW* and *DL* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *YR*, *DY*, *CM*, *IP*, *GF*, *ND*, *WY*, *LY*, *DD* and *ED* (variables are sorted from the strongest).
+- low values for variables like *ID*, *PR*, *DP*, *QF*, *DI*, *LD*, *SF*, *RG*, *QM* and *DV* (variables are sorted from the weakest).
+
+
+* * *
+
+The **dimension 52** opposes individuals characterized by a strongly positive coordinate on the axis (to the top of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the bottom of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *YR*, *DY*, *CM*, *IP*, *GF*, *ND*, *WY*, *LY*, *DD* and *ED* (variables are sorted from the strongest).
+- low values for variables like *ID*, *PR*, *DP*, *QF*, *DI*, *LD*, *SF*, *RG*, *QM* and *DV* (variables are sorted from the weakest).
+
+The group 2 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *PW*, *WQ*, *DN*, *WM*, *MS*, *SR*, *PI*, *IH*, *VC* and *CG* (variables are sorted from the strongest).
+- low values for variables like *FT*, *YR*, *VM*, *EH*, *AR*, *PH*, *ST*, *SD*, *LW* and *DL* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *DP*, *LD*, *ID*, *HD*, *EP*, *HF*, *PR*, *VM*, *IS* and *QF* (variables are sorted from the strongest).
+- low values for variables like *NE*, *DY*, *IP*, *NQ*, *WY*, *AT*, *YR*, *ER*, *ED* and *QT* (variables are sorted from the weakest).
+
+
+- - -
+
+### 29. Description of the plane 53:54
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 53:54, choix = 'ind', invisible = 'quali', title = '', cex = cex)
+```
+
+**Figure 29.1 - Individuals factor map (PCA)**
+*The labeled individuals are those with the higher contribution to the plane construction.*
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 53:54, choix = 'var', title = '', cex = cex)
+```
+
+**Figure 29.2 - Variables factor map (PCA)**
+*The labeled variables are those the best shown on the plane.*
+
+* * *
+
+The **dimension 53** opposes individuals characterized by a strongly positive coordinate on the axis (to the right of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the left of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *FG*, *CH*, *QA*, *QM*, *PI*, *VQ*, *IQ*, *NS*, *WM* and *IE* (variables are sorted from the strongest).
+- low values for variables like *IM*, *RY*, *ML*, *KV*, *FM*, *YH*, *SM*, *TR*, *VC* and *TH* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *FN*, *NA*, *LF*, *CQ*, *ER*, *TN*, *PH*, *HE*, *HK* and *GT* (variables are sorted from the strongest).
+- low values for variables like *MK*, *HV*, *VQ*, *MV*, *AN*, *M*, *WE*, *YM*, *IW* and *VD* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *SM*, *IM*, *TQ*, *TR*, *FT*, *DP*, *RM*, *KV*, *RT* and *FM* (variables are sorted from the strongest).
+- low values for variables like *CH*, *FN*, *VY*, *IE*, *GN*, *YL*, *QM*, *DN*, *FS* and *VP* (variables are sorted from the weakest).
+
+
+* * *
+
+The **dimension 54** opposes individuals characterized by a strongly positive coordinate on the axis (to the top of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the bottom of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *SM*, *IM*, *TQ*, *TR*, *FT*, *DP*, *RM*, *KV*, *RT* and *FM* (variables are sorted from the strongest).
+- low values for variables like *CH*, *FN*, *VY*, *IE*, *GN*, *YL*, *QM*, *DN*, *FS* and *VP* (variables are sorted from the weakest).
+
+The group 2 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *FN*, *NA*, *LF*, *CQ*, *ER*, *TN*, *PH*, *HE*, *HK* and *GT* (variables are sorted from the strongest).
+- low values for variables like *MK*, *HV*, *VQ*, *MV*, *AN*, *M*, *WE*, *YM*, *IW* and *VD* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *FG*, *CH*, *QA*, *QM*, *PI*, *VQ*, *IQ*, *NS*, *WM* and *IE* (variables are sorted from the strongest).
+- low values for variables like *IM*, *RY*, *ML*, *KV*, *FM*, *YH*, *SM*, *TR*, *VC* and *TH* (variables are sorted from the weakest).
+
+
+- - -
+
+### 30. Description of the dimension 55
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 55:56, choix = 'ind', invisible = 'quali', title = '', cex = cex)
+```
+
+**Figure 30.1 - Individuals factor map (PCA)**
+*The labeled individuals are those with the higher contribution to the plane construction.*
+
+```{r, echo = FALSE, fig.align = 'center', fig.height = 3.5, fig.width = 5.5}
+drawn <-
+integer(0)
+par(mar = c(4.1, 4.1, 1.1, 2.1))
+plot.PCA(res, select = drawn, axes = 55:56, choix = 'var', title = '', cex = cex)
+```
+
+**Figure 30.2 - Variables factor map (PCA)**
+*The labeled variables are those the best shown on the plane.*
+
+* * *
+
+The **dimension 55** opposes individuals characterized by a strongly positive coordinate on the axis (to the right of the graph)
+to individuals characterized by a strongly negative coordinate on the axis (to the left of the graph).
+
+The group 1 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *WT*, *FY*, *HN*, *DF*, *PH*, *AM*, *KF*, *LS*, *CM* and *MA* (variables are sorted from the strongest).
+- low values for variables like *NV*, *AW*, *WP*, *KD*, *NK*, *FM*, *LM*, *LW*, *WD* and *MW* (variables are sorted from the weakest).
+
+The group 2 (characterized by a positive coordinate on the axis) is sharing :
+
+- high values for variables like *WS*, *HR*, *TV*, *VP*, *AW*, *DR*, *HV*, *RW*, *DW* and *WK* (variables are sorted from the strongest).
+- low values for variables like *WI*, *SM*, *YW*, *QV*, *VD*, *NM*, *FE*, *PM*, *LN* and *MS* (variables are sorted from the weakest).
+
+The group 3 (characterized by a negative coordinate on the axis) is sharing :
+
+- high values for variables like *MW*, *VD*, *NV*, *WI*, *SM*, *WP*, *AI*, *IN*, *VG* and *WR* (variables are sorted from the strongest).
+- low values for variables like *FY*, *WT*, *SE*, *DQ*, *MA*, *ET*, *QD*, *WS*, *SQ* and *WK* (variables are sorted from the weakest).
+
+
+- - -
+
+### 31. Classification
+
+The dataset is too large to perform the classification.
+
+- - -
+
+## Annexes
+

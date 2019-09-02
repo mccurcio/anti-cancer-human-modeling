@@ -1,0 +1,90 @@
+---
+title: "Corrplot    "
+author: "MCC"
+date: "8/31/2019"
+output: html_document
+---
+
+Libraries  
+```{r message=FALSE, warning=FALSE}
+library(knitr)
+opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE, cache.lazy = FALSE)
+
+#import java.util.List ?
+
+Libraries = c("doMC", "readr", "ggplot2", "corrplot", "caret")
+
+# Load Libraries
+for(p in Libraries){ library(p, character.only = TRUE) }
+
+# registerDoMC(cores = 3) # Start multi-processor mode
+# registerDoSEQ() # Stop multi-processor mode
+```
+
+Import data
+```{r message=FALSE, warning=FALSE}
+cancer_human_comps <- read_csv("../1data/cancer_human_comps.csv",
+                               col_types = cols(Class = col_factor(levels = c("0","1"))))
+#View(cancer_human_comps)
+#head(cancer_human_comps)
+
+colnames(cancer_human_comps)[244] <- "NA" 
+
+cancer_human_Active <- cancer_human_comps[, c(4:423)]
+```
+
+Correlation Matrix for 423 features. 
+```{r fig.height=7, fig.width=7}
+cancer_human_Active_scale <- scale(cancer_human_Active, center = TRUE, scale = TRUE)
+
+corr_matrix <- cor(cancer_human_Active_scale)
+
+corrplot(corr_matrix, 
+         # order = "hclust", # With out hclust, we see order as in df.
+         type = "lower",
+         addgrid.col = "NA")
+```
+
+After inspecting the correlation matrix, we set the correlation threshold at 0.75.
+
+Filtered crrelation matrix for 423 features. 
+```{r fig.height=7, fig.width=7}
+highly_corr <- findCorrelation(corr_matrix, 0.75, verbose = TRUE)
+
+# Remove all the variables correlated greater than 0.75.
+corr_matrix_filtered_scaled <- cancer_human_Active_scale[, -highly_corr]
+corr_matrix_f_s <- cor(corr_matrix_filtered_scaled)
+
+corrplot(corr_matrix_f_s, 
+         # order = "hclust", # With out hclust, we see order as in df.
+         type = "lower",
+         addgrid.col = "NA")
+```
+
+### Results: 
+
+There is significant correlation between eight of the 423 features to a degree greater than 0.75.
+
+- Combination row 1 and column 21 is above the cut-off, value = 0.86 
+    - column 1 = "A", column 21 = "AA"
+- Combination row 2 and column 42 is above the cut-off, value = 0.795 
+    - column 2 = "C", column 42 = "CC"
+- Combination row 13 and column 273 is above the cut-off, value = 0.773 
+    - column 13 = "P", column 273 = "PP"
+- Combination row 16 and column 336 is above the cut-off, value = 0.788 
+    - column 16 = "S", column 336 = "SS"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

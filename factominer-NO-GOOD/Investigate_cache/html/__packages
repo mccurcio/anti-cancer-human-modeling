@@ -1,0 +1,12 @@
+base
+knitr
+foreach
+iterators
+doMC
+readr
+ggplot2
+corrplot
+lattice
+caret
+FactoMineR
+FactoInvestigate

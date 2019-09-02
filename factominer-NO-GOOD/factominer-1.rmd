@@ -1,0 +1,50 @@
+---
+title: "FactoMineR-FactoInvestigate"
+author: "MCC"
+date: "8/31/2019"
+output: html_document
+---
+
+Libraries  
+```{r message=FALSE, warning=FALSE}
+library(knitr)
+opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE, cache.lazy = FALSE)
+
+#import java.util.List ?
+
+Libraries = c("doMC", "readr", "ggplot2", "FactoMineR", "FactoInvestigate")
+
+# Load Libraries
+for(p in Libraries){ library(p, character.only = TRUE) }
+
+# registerDoMC(cores = 3) # Start multi-processor mode
+# registerDoSEQ() # Stop multi-processor mode
+```
+
+Import data
+```{r message=FALSE, warning=FALSE}
+cancer_human_comps <- read_csv("../1data/cancer_human_comps.csv",
+                               col_types = cols(Class = col_factor(levels = c("0","1"))))
+#View(cancer_human_comps)
+#head(cancer_human_comps)
+
+colnames(cancer_human_comps)[244] <- "NA" 
+
+cancer_human_Active <- cancer_human_comps[, c(4:423)]
+```
+
+```{r}
+cancer_human_comps_results = PCA(cancer_human_Active,
+                                 #quanti.sup = 1:423, 
+                                 graph = FALSE)
+
+Investigate(cancer_human_comps_results)
+
+```
+
+
+
+
+
+
+
