@@ -1,0 +1,67 @@
+---
+title: "Boruta-Dim-Redux with 142 Features"
+author: "MCC"
+date: "9/2/2019"
+output: html_document
+---
+
+Title:
+
+Libraries  
+```{r message=FALSE, warning=FALSE}
+library(knitr)
+opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE, cache.lazy = FALSE)
+
+Libraries = c("doMC", "knitr", "Boruta", "readr")
+
+for(p in Libraries){  # Install if not present
+    if(!require(p, character.only = TRUE)) { install.packages(p, dependencies = T) }
+    library(p, character.only = TRUE)
+}
+```
+
+Import data
+```{r message=FALSE, warning=FALSE}
+cancer_human_comps <- read_csv("../1data/cancer_human_comps.csv",
+                               col_types = cols(Class = col_factor(levels = c("0","1"))))
+#View(cancer_human_comps)
+#head(cancer_human_comps)
+
+colnames(cancer_human_comps)[244] <- "NA" 
+
+cancer_human_Active <- cancer_human_comps[, c("Class", "A", "C", "D", "E", "F", "G", "H", "K", "L", "N", "Q", "R", "S", "T", "V", "Y", "AA", "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AP", "AR", "AT", "AV", "AY", "CA", "CC", "CE", "CF", "CG", "CI", "CK", "CL", "CN", "CP", "CQ", "CR", "CS", "CV", "CY", "DA", "DC", "DD", "DG", "DK", "DP", "DQ", "DR", "DS", "DW", "EA", "EC", "EE", "EK", "EN", "ES", "FA", "FC", "FK", "FL", "FT", "GA", "GC", "GD", "GG", "GL", "GR", "GT", "GV", "HC", "HK", "HS", "IA", "ID", "IG", "KC", "KD", "KE", "KF", "KH", "KK", "KN", "KQ", "KR", "KS", "KY", "LA", "LC", "LE", "LH", "LL", "LQ", "LS", "ME", "NA", "NC", "NI", "NK", "NS", "PA", "PC", "PD", "PS", "PT", "PV", "QC", "QE", "QK", "QL", "RA", "RD", "RE", "RI", "RK", "RM", "SA", "SC", "SE", "SK", "SL", "SP", "SQ", "SS", "ST", "TA", "TC", "TD", "TG", "TK", "TS", "TT", "TV", "VA", "VC", "YA", "YC", "YF", "YL")]
+```
+
+
+Boruta run with Only 142 Features (2nd iteration of Boruta)
+```{r, cache=TRUE}
+registerDoMC(cores = 3) # Start multi-processor mode
+start_time <- Sys.time() # Start timer
+
+set.seed(1000)
+Boruta_cancer_human_Active <- Boruta(Class ~ ., data = cancer_human_Active, doTrace = 1, mtry = 2, ntree = 500)
+
+registerDoSEQ() # Stop multi-processor mode
+Sys.time() - start_time  # Display       time difference
+```
+Show Model Info
+```{r}
+Boruta_cancer_human_Active
+```
+
+```{r fig.width=7.25}
+plot(Boruta_cancer_human_Active)
+```
+
+Get Formula
+```{r}
+getConfirmedFormula(Boruta_cancer_human_Active)
+```
+
+
+
+
+
+
+
+

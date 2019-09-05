@@ -1,0 +1,9 @@
+base
+knitr
+foreach
+iterators
+doMC
+readr
+ggplot2
+lattice
+caret

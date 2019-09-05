@@ -1,0 +1,106 @@
+---
+title: "Identifying & Rejecting Correlated Predictors"
+author: "MCC"
+date: "8/31/2019"
+output: html_document
+---
+
+Libraries  
+```{r message=FALSE, warning=FALSE}
+library(knitr)
+opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE, cache.lazy = FALSE)
+
+Libraries = c("doMC", "readr", "ggplot2", "caret", "dplyr")
+
+# Load Libraries
+for(p in Libraries){ library(p, character.only = TRUE) }
+```
+
+Import data
+```{r message=FALSE, warning=FALSE}
+cancer_human_comps <- read_csv("../1data/cancer_human_comps.csv",
+                               col_types = cols(Class = col_factor(levels = c("0","1"))))
+#View(cancer_human_comps)
+#head(cancer_human_comps)
+
+colnames(cancer_human_comps)[244] <- "NA" 
+
+cancer_human_Active <- cancer_human_comps[, c("A", "C", "D", "E", "F", "G", "H", "K", "L", "N", "Q", "R", "S", "T", "V", "Y", "AA", "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AP", "AR", "AT", "AV", "AY", "CA", "CC", "CE", "CF", "CG", "CI", "CK", "CL", "CN", "CP", "CQ", "CR", "CS", "CV", "CY", "DA", "DC", "DD", "DG", "DK", "DP", "DQ", "DR", "DS", "DW", "EA", "EC", "EE", "EK", "EN", "ES", "FA", "FC", "FK", "FL", "FT", "GA", "GC", "GD", "GG", "GL", "GR", "GT", "GV", "HC", "HK", "HS", "IA", "ID", "IG", "KC", "KD", "KE", "KF", "KH", "KK", "KN", "KQ", "KR", "KS", "KY", "LA", "LC", "LE", "LH", "LL", "LQ", "LS", "ME", "NA", "NC", "NI", "NK", "NS", "PA", "PC", "PD", "PS", "PT", "PV", "QC", "QE", "QK", "QL", "RA", "RD", "RE", "RI", "RK", "RM", "SA", "SC", "SE", "SK", "SL", "SP", "SQ", "SS", "ST", "TA", "TC", "TD", "TG", "TK", "TS", "TT", "TV", "VA", "VC", "YA", "YC", "YF", "YL")]
+```
+
+Previous Correlation run showed;
+
+There is significant correlation between 6 of the 142 features to a degree greater than 0.75.  
+
+- Combination row 1 and column 17 is above the cut-off, value = 0.86  
+    - “A” Vs “AA”  
+- Combination row 2 and column 31 is above the cut-off, value = 0.795  
+    - “C” Vs “CC”  
+- Combination row 13 and column 127 is above the cut-off, value = 0.788  
+    - “S” Vs “SS”  
+
+NOTE: In order to eliminate the predictors we compare the correlation coefficients of the samples against all others and reject the predictor with the highest overall score.
+
+“A” Vs “AA”
+```{r}
+vals_of_A <- cor(cancer_human_Active$A, 
+                 cancer_human_Active[,-1])
+mean_of_As <- mean(vals_of_A)
+
+vals_of_AA <- cor(cancer_human_Active$AA, 
+                 cancer_human_Active[,-17])
+mean_of_AAs <- mean(vals_of_AA)
+
+if (mean_of_As >= mean_of_AAs) {
+    print("Reject A") 
+    } else { 
+    print("Reject AA") 
+    }
+```
+
+“C” Vs “CC” 
+```{r}
+vals_of_C <- cor(cancer_human_Active$C, 
+                 cancer_human_Active[,-2])
+mean_of_Cs <- mean(vals_of_C)
+
+vals_of_CC <- cor(cancer_human_Active$AA, 
+                 cancer_human_Active[,-31])
+mean_of_CCs <- mean(vals_of_CC)
+
+if (mean_of_Cs >= mean_of_CCs) {
+    print("Reject C") 
+    } else { 
+    print("Reject CC") 
+    }
+```
+
+“S” Vs “SS” 
+```{r}
+vals_of_S <- cor(cancer_human_Active$S, 
+                 cancer_human_Active[,-13])
+mean_of_Ss <- mean(vals_of_S)
+
+vals_of_SS <- cor(cancer_human_Active$SS, 
+                 cancer_human_Active[,-127])
+mean_of_SSs <- mean(vals_of_SS)
+
+
+if (mean_of_Ss >= mean_of_SSs) {
+    print("Reject S") 
+    } else { 
+    print("Reject SS") 
+    }
+```
+
+**Results:**
+
+- **Reject A**  - row 1 
+- **Reject C**  - row 2
+- **Reject SS** - column 127 
+
+142 - 3 = 139
+
+**Conclusion:**
+
+**USE DATASET**: cancer_human_comps[, c("D", "E", "F", "G", "H", "K", "L", "N", "Q", "R", "S", "T", "V", "Y", "AA", "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AP", "AR", "AT", "AV", "AY", "CA", "CC", "CE", "CF", "CG", "CI", "CK", "CL", "CN", "CP", "CQ", "CR", "CS", "CV", "CY", "DA", "DC", "DD", "DG", "DK", "DP", "DQ", "DR", "DS", "DW", "EA", "EC", "EE", "EK", "EN", "ES", "FA", "FC", "FK", "FL", "FT", "GA", "GC", "GD", "GG", "GL", "GR", "GT", "GV", "HC", "HK", "HS", "IA", "ID", "IG", "KC", "KD", "KE", "KF", "KH", "KK", "KN", "KQ", "KR", "KS", "KY", "LA", "LC", "LE", "LH", "LL", "LQ", "LS", "ME", "NA", "NC", "NI", "NK", "NS", "PA", "PC", "PD", "PS", "PT", "PV", "QC", "QE", "QK", "QL", "RA", "RD", "RE", "RI", "RK", "RM", "SA", "SC", "SE", "SK", "SL", "SP", "SQ", "ST", "TA", "TC", "TD", "TG", "TK", "TS", "TT", "TV", "VA", "VC", "YA", "YC", "YF", "YL")]

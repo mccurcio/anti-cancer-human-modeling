@@ -1,0 +1,95 @@
+---
+title: "pca-dim-redux"
+author: "MCC"
+date: "8/29/2019"
+output: html_document
+---
+
+Title:
+
+Libraries  
+```{r message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE, cache.lazy = FALSE)
+
+Libraries = c("readr", "knitr", "seqinr", "stringr", "doMC")
+
+for(p in Libraries){ library(p, character.only = TRUE) }
+```
+
+FOR `doMC`  
+1. registerDoMC(cores = 3) # Start multi-processor mode  
+2. registerDOSEQ() # Stop multi-processor mode  
+
+Import data
+```{r message=FALSE, warning=FALSE}
+cancer_human_comps <- read_csv("../1data/cancer_human_comps.csv",
+                               col_types = cols(Class = col_factor(levels = c("0","1"))))
+#View(cancer_human_comps)
+#head(cancer_human_comps)
+
+colnames(cancer_human_comps)[244] <- "NA" 
+
+cancer_human_Active <- cancer_human_comps[, c("D", "E", "F", "G", "H", "K", "L", "N", "Q", "R", "S", "T", "V", "Y", "AA", "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AP", "AR", "AT", "AV", "AY", "CA", "CC", "CE", "CF", "CG", "CI", "CK", "CL", "CN", "CP", "CQ", "CR", "CS", "CV", "CY", "DA", "DC", "DD", "DG", "DK", "DP", "DQ", "DR", "DS", "DW", "EA", "EC", "EE", "EK", "EN", "ES", "FA", "FC", "FK", "FL", "FT", "GA", "GC", "GD", "GG", "GL", "GR", "GT", "GV", "HC", "HK", "HS", "IA", "ID", "IG", "KC", "KD", "KE", "KF", "KH", "KK", "KN", "KQ", "KR", "KS", "KY", "LA", "LC", "LE", "LH", "LL", "LQ", "LS", "ME", "NA", "NC", "NI", "NK", "NS", "PA", "PC", "PD", "PS", "PT", "PV", "QC", "QE", "QK", "QL", "RA", "RD", "RE", "RI", "RK", "RM", "SA", "SC", "SE", "SK", "SL", "SP", "SQ", "ST", "TA", "TC", "TD", "TG", "TK", "TS", "TT", "TV", "VA", "VC", "YA", "YC", "YF", "YL")]
+```
+
+
+**Pricipal Components Analysis with princomp**
+
+```{r}
+#select the columns with the variables that you're conducting the PCA on
+pca_active <- cancer_human_comps[, 4:23]
+
+pca_fit <- princomp(pca_active, cor = TRUE) 
+
+summary(pca_fit) # print summary of components
+```
+Scree Plot
+```{r}
+plot(pca_fit, type="lines")
+```
+
+
+```{r}
+#load more libraries
+library(factoextra)
+library(corrplot)
+
+# Initialize the PCA with the prcomp() function
+pca_prcomp <- prcomp(pca_active, scale = TRUE)
+
+# Visualize the eigenvalues with a scree plot. 
+fviz_eig(pca_prcomp, addlabels = TRUE, ylim = c(0,30))
+```
+
+```{r}
+# Get the eigenvalues
+eig.val <- get_eigenvalue(pca_prcomp)
+eig.val
+```
+
+```{r}
+res.var <- get_pca_var(pca_prcomp)
+#res.var$contrib 
+#res.var$cos2    
+
+# Visualize Quality of Representation (cos2)
+corrplot(res.var$cos2, is.corr=FALSE)
+```
+
+
+```{r}
+# Visualize total quality of representation (cos2) of variables on Dim.1 and Dim.2 (axes=1:2)
+fviz_cos2(pca_prcomp, 
+          ylim = c(0,0.8),
+          choice = "var", 
+          axes = 1:2)
+```
+
+
+```{r}
+eig.val$cumulative.variance.percent
+plot(eig.val$cumulative.variance.percent,
+     ylim = c(0,100),
+     type = "b")
+```
+

@@ -1,0 +1,85 @@
+---
+title: "Corrplot using post Boruta dataset"
+author: "MCC"
+date: "8/31/2019"
+output: html_document
+---
+
+Libraries  
+```{r message=FALSE, warning=FALSE}
+library(knitr)
+opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE, cache.lazy = FALSE)
+
+Libraries = c("doMC", "readr", "ggplot2", "corrplot", "caret")
+
+# Load Libraries
+for(p in Libraries){ library(p, character.only = TRUE) }
+```
+
+Import data
+```{r message=FALSE, warning=FALSE}
+cancer_human_comps <- read_csv("../1data/cancer_human_comps.csv",
+                               col_types = cols(Class = col_factor(levels = c("0","1"))))
+#View(cancer_human_comps)
+#head(cancer_human_comps)
+
+colnames(cancer_human_comps)[244] <- "NA" 
+
+cancer_human_Active <- cancer_human_comps[, c("A", "C", "D", "E", "F", "G", "H", "K", "L", "N", "Q", "R", "S", "T", "V", "Y", "AA", "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AP", "AR", "AT", "AV", "AY", "CA", "CC", "CE", "CF", "CG", "CI", "CK", "CL", "CN", "CP", "CQ", "CR", "CS", "CV", "CY", "DA", "DC", "DD", "DG", "DK", "DP", "DQ", "DR", "DS", "DW", "EA", "EC", "EE", "EK", "EN", "ES", "FA", "FC", "FK", "FL", "FT", "GA", "GC", "GD", "GG", "GL", "GR", "GT", "GV", "HC", "HK", "HS", "IA", "ID", "IG", "KC", "KD", "KE", "KF", "KH", "KK", "KN", "KQ", "KR", "KS", "KY", "LA", "LC", "LE", "LH", "LL", "LQ", "LS", "ME", "NA", "NC", "NI", "NK", "NS", "PA", "PC", "PD", "PS", "PT", "PV", "QC", "QE", "QK", "QL", "RA", "RD", "RE", "RI", "RK", "RM", "SA", "SC", "SE", "SK", "SL", "SP", "SQ", "SS", "ST", "TA", "TC", "TD", "TG", "TK", "TS", "TT", "TV", "VA", "VC", "YA", "YC", "YF", "YL")]
+```
+
+
+```{r}
+#str(cancer_human_Active)
+```
+
+Correlation Matrix for 142 features. 
+```{r fig.height=7, fig.width=7}
+registerDoMC(cores = 3) # Start multi-processor mode
+
+corr_matrix <- cor(cancer_human_Active, use = "pairwise.complete.obs")
+
+corrplot(corr_matrix, 
+         type = "lower",
+         addgrid.col = "NA")
+
+registerDoSEQ() # Stop multi-processor mode
+```
+
+After inspecting the correlation matrix, we set the correlation threshold at 0.75.
+
+Filter correlation matrix of 142 features w threshold at 0.75.
+```{r fig.height=7, fig.width=7}
+highly_corr <- findCorrelation(corr_matrix, 0.75, verbose = TRUE)
+
+# Remove all the variables correlated greater than 0.75.
+cancer_human_Active <- cancer_human_Active[, -highly_corr]
+
+corr_matrix_f_s <- cor(cancer_human_Active)
+
+corrplot(corr_matrix_f_s,
+         type = "lower",
+         addgrid.col = "NA")
+```
+
+### Results: 
+
+There is significant correlation between 6 of the 142 features to a degree greater than 0.75.
+
+- Combination row 1 and column 17 is above the cut-off, value = 0.86  
+    - "A" Vs "AA"  
+- Combination row 2 and column 31 is above the cut-off, value = 0.795  
+ 	- "C" Vs "CC"  
+- Combination row 13 and column 127 is above the cut-off, value = 0.788   
+ 	- "S" Vs "SS"  
+
+
+
+
+
+
+
+
+
+
+

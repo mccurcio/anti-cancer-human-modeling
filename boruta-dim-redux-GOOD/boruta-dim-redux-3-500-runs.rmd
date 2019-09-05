@@ -40,7 +40,7 @@ set.seed(1000)
 Boruta_cancer_human_Active <- Boruta(Class ~ ., data = cancer_human_Active, doTrace = 1, mtry = 2, ntree = 500)
 
 registerDoSEQ() # Stop multi-processor mode
-Sys.time() - start_time  # Display time difference
+Sys.time() - start_time  # Display       time difference
 ```
 Show Model Info
 ```{r}
@@ -58,7 +58,32 @@ getConfirmedFormula(Boruta_cancer_human_Active)
 
 Results from **Boruta_cancer_human_Active**
 
-- Class ~ 
+- Class ~ A + C + D + E + F + G + H + K + L + N +                 #10
+          Q + R + S + T + V + Y + AA + AD + AE + AF + 
+          AG + AI + AL + AM + AP + AR + AT + AV + AY + CA +
+          CC + CE + CF + CG + CI + CK + CL + CN + CP + CQ + 
+          CR + CS + CV + CY + DA + DC + DD + DG + DK + DP +       #50
+          DQ + DR + DS + DW + EA + EC + EE + EK + EN + ES +     
+          FA + FC + FK + FL + FT + GA + GC + GD + GG + GL +      
+          GR + GT + GV + HC + HK + HS + IA + ID + IG + KC +         
+          KD + KE + KF + KH + KK + KN + KQ + KR + KS + KY +       
+          LA + LC + LE + LH + LL + LQ + LS + ME + `NA` + NC +     #100
+          NI + NK + NS + PA + PC + PD + PS + PT + PV + QC +      
+          QE + QK + QL + RA + RD + RE + RI + RK + RM + SA +      
+          SC + SE + SK + SL + SP + SQ + SS + ST + TA + TC +      
+          TD + TG + TK + TS + TT + TV + VA + VC + YA + YC +       #140
+          YF + YL                                                 #142
+
+
+Results: Keep 142 attributes listed above and dismiss the rest.
+
+
+```{r}
+post_boruta_dataset <- cancer_human_Active[, c("A", "C", "D", "E", "F", "G", "H", "K", "L", "N", "Q", "R", "S", "T", "V", "Y", "AA", "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AP", "AR", "AT", "AV", "AY", "CA", "CC", "CE", "CF", "CG", "CI", "CK", "CL", "CN", "CP", "CQ", "CR", "CS", "CV", "CY", "DA", "DC", "DD", "DG", "DK", "DP", "DQ", "DR", "DS", "DW", "EA", "EC", "EE", "EK", "EN", "ES", "FA", "FC", "FK", "FL", "FT", "GA", "GC", "GD", "GG", "GL", "GR", "GT", "GV", "HC", "HK", "HS", "IA", "ID", "IG", "KC", "KD", "KE", "KF", "KH", "KK", "KN", "KQ", "KR", "KS", "KY", "LA", "LC", "LE", "LH", "LL", "LQ", "LS", "ME", "NA", "NC", "NI", "NK", "NS", "PA", "PC", "PD", "PS", "PT", "PV", "QC", "QE", "QK", "QL", "RA", "RD", "RE", "RI", "RK", "RM", "SA", "SC", "SE", "SK", "SL", "SP", "SQ", "SS", "ST", "TA", "TC", "TD", "TG", "TK", "TS", "TT", "TV", "VA", "VC", "YA", "YC", "YF", "YL")]
+```
+
+
+
 
 
 
