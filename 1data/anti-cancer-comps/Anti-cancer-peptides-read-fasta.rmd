@@ -91,9 +91,7 @@ Prepare_csv_file <- function(file_name, col_names) {
 Prepare_csv_file(file_name, col_names)                        
 ```
 
-
-### Prepare MONO_DI_PEPTIDE Percents
-
+Prepare MONO_DI_PEPTIDE Percents
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 #anticancer  # df = anticancer; See: Import data
 Class = 1

@@ -5,7 +5,6 @@ date: "August 31, 2017"
 output: html_document
 ---
 
-
 ## Introduction   
 
 ### Produce AA matrix:  
@@ -135,13 +134,11 @@ for (class in 0:6) {
 
 ```{r merge_csv_percent_files, eval=FALSE}
 
-
 DIPEPTIDE_DIR = "/home/mcc/Dropbox/git_projects/random_forest_dk_project/uniprot_1/dipeptides"
 setwd(DIPEPTIDE_DIR)
 filenames=list.files()
 #filenames
 # IN BASH: cat *.csv > complete_file.csv1
-
 ```
 
 

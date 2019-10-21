@@ -15,10 +15,15 @@ One of the purposes of the EDA is to learn if the data needs to pre-processed or
 
 A second aspect of the .............
 
-Questions to consider:  
+## Formulate your questions
+
+The purpose of the EDA is seveeral fold:
+
 1. What is range of numbers?  
-2. Do any features have skew >= 2.0? Should these features be transformed?  
-3.
+1. Do any features have skew >= 2.0? Should these features be transformed?  
+1. Do our distributions violate normality?  
+1. To learn if the data needs to pre-processed or transformed before machine learning classification.
+1. To determine if dimensionality reduction can allow us to remove unnecessary features.
 
 Libraries  
 ```{r message=FALSE, warning=FALSE}
@@ -29,33 +34,19 @@ Libraries = c("readr", "knitr", "seqinr", "stringr")
 for(p in Libraries){ library(p, character.only = TRUE) }
 ```
 
-First we need to contenate two files such that we can use them in the following work.
-
-1. /human-comps/human_ctrl_comps.csv
-2. /anti-cancer-comps/anti_cancer_comps.csv
-
-To concatenate: `cat *.csv > cancer_human_comps.csv`
-
-However the top line of ONE of the files needs to be extracted from the `anticancer_human_proteins.csv` such that the header from one file is embedded in the middle to concatenated file.
-
-## Formulate your questions
-
-The purpose of the EDA is seveeral fold:
-
-1. To learn if the data needs to pre-processed or transformed before machine learning classification.
-2. To determine if dimensionality reduction can allow us to remove unnessary features.
-
 Import data
 ```{r message=FALSE, warning=FALSE}
-cancer_human_comps <- read_csv("1data/cancer_human_comps.csv",
+cancer_human_comps <- read_csv("../1data/cancer_human_comps.csv",
                                col_types = cols(Class = col_factor(levels = c("0","1"))))
-colnames(cancer_human_comps)[244] <- "NA" # NOTE: Column X244 should be marked "NA".  "NA" = Asparagine + Alanine
+
+colnames(cancer_human_comps)[244] <- "NA" 
+# NOTE: Column X244 should be marked "NA".  "NA" = Asparagine + Alanine
 #View(cancer_human_comps)
 ```
 
-## Check Data Structure
+Check Data Structure
 ```{r}
-str(cancer_human_comps)
+# str(cancer_human_comps)
 ```
 
 ### Dataset Problems?
@@ -76,14 +67,7 @@ class(cancer_human_comps$TotalAA)   # Col 3
 class(cancer_human_comps$A)         # Col 4
 ```
 
-### Use `str()`
-
-- Using `str()`, we see Classes and numerical data is correct and alphebetization is correct.
-```{r}
-str(cancer_human_comps)
-```
-
-### Use `head` & `tail`
+Use `head` & `tail`
 
 ```{r}
 head(cancer_human_comps, n=2)
@@ -108,10 +92,10 @@ class_table <- data.matrix(
 class_table
 ```
 
-### Check for missing values
+Check for ANY missing values
 
 ```{r}
-sapply(cancer_human_comps, function(x) sum(is.na(x)))
+sapply(cancer_human_comps, function(x) any(is.na(x)))
 ```
 -  **No missing values found.**
 
@@ -127,28 +111,36 @@ Pearson's correlation coefficient, $~~\rho_{x,y} = \frac {E \left[(X - \mu_x)(X 
 
 Pearson's correlation coefficient for samples, $~~r_{xy} ~=~ \frac {\sum_{i=1}^n (x_i - \bar x)(y_i - \bar y)} { {\sqrt{\sum_{i=1}^n (x_i - \bar x)^2} } {\sqrt{\sum_{i=1}^n (y_i - \bar y)^2} }  }$
 
-```{r message=FALSE, warning=FALSE}
+```{r fig.height=7.5, fig.width=7.5, message=FALSE, warning=FALSE}
 library("corrplot")
 library("RColorBrewer")
 
-chcomp_corr_mat = cor(cancer_human_comps[,c(4:23)], 
-                     method = "p") # "p": Pearson test for continous variables
+chcomp_corr_mat = cor(cancer_human_comps[,c(4:423)], 
+                      method = "p") # "p": Pearson test for continous variables
 
 corrplot(abs(chcomp_corr_mat),
-         title = "Correlation Plot Of AA Features", 
+         title = "Correlation (Absolute Value of R) Plot Of Amino Acid Features", 
          method = "square", 
          type = "lower",
-         tl.pos = "d",
+         tl.pos = "lt",
          cl.lim = c(0, 1),
-         addgrid.col = "lightgrey", 
+         addgrid.col = NA, 
          cl.pos = "b", # Color legend position bottom.
-         order = "FPC", # "FPC" = first principal component order.
-         mar = c(1, 2, 1, 2),
-         tl.col = "black")
+         tl.col = "white")
 ```
 
 ```{r}
-chcomp_corr_mat["A", "A"]
+
+if (chcomp_corr_mat > 0.75) { 
+        print("At least one correlation is > 0.75")
+}
+
+
+which(chcomp_corr_mat == max(chcomp_corr_mat), arr.ind = TRUE)
+
+
+chcomp_corr_mat["A", "A"] # Just a double check
+
 chcomp_corr_mat["A", "K"]
 chcomp_corr_mat["A", "N"]
 chcomp_corr_mat["A", "S"]

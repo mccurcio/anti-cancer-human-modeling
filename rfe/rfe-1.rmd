@@ -1,0 +1,64 @@
+---
+title: "Recursive Feature Elimination via caret"
+author: "MCC"
+date: "9/7/2019"
+output: html_document
+---
+
+Libraries  
+```{r message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE, cache.lazy = FALSE)
+
+Libraries = c("readr", "knitr", "caret", "Hmisc", "randomForest", "mlbench")
+
+for(p in Libraries){ library(p, character.only = TRUE) }
+```
+
+Import data
+```{r message=FALSE, warning=FALSE}
+cancer_human_comps <- read_csv("../1data/cancer_human_comps.csv",
+                               col_types = cols(Class = col_factor(levels = c("0","1"))))
+
+colnames(cancer_human_comps)[244] <- "NA" 
+# NOTE: Column X244 should be marked "NA".  "NA" = Asparagine + Alanine
+#View(cancer_human_comps)
+```
+
+
+TEST with MLBENCH data
+```{r}
+n <- 100
+p <- 40
+sigma <- 1
+set.seed(1)
+sim <- mlbench.friedman1(n, sd = sigma)
+colnames(sim$x) <- c(paste("real", 1:5, sep = ""),
+                     paste("bogus", 1:5, sep = ""))
+bogus <- matrix(rnorm(n * p), nrow = n)
+colnames(bogus) <- paste("bogus", 5+(1:ncol(bogus)), sep = "")
+x <- cbind(sim$x, bogus)
+y <- sim$y
+```
+
+```{r}
+normalization <- preProcess(x)
+x <- predict(normalization, x)
+x <- as.data.frame(x)
+subsets <- c(1:5, 10, 15, 20, 25)
+```
+
+```{r}
+set.seed(10)
+
+ctrl <- rfeControl(functions = lmFuncs,
+                   method = "repeatedcv",
+                   repeats = 5,
+                   verbose = TRUE)
+
+lmProfile <- rfe(x, y,
+                 sizes = subsets,
+                 rfeControl = ctrl)
+
+lmProfile
+```
+
