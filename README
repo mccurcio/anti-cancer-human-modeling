@@ -1,15 +1,69 @@
-This folder contains items for MCC's 'Anti-cancer peptide project'
+.
+|-- 1data
+|   |-- anti-cancer-comps
+|   |   |-- Anti-cancer-peptides-read-fasta.rmd
+|   |   `-- anti_cancer_comps.csv
+|   |-- cancer_human_comps.csv
+|   `-- human-comps
+|       |-- human-control-comps.rmd
+|       |-- human_ctrl_comps.csv
+|       `-- uniprot-taxonomy%3A%22Homo+sapiens+%28Human%29+%5B9606%5D%22+existence%3A%22Evid--.fasta
+|-- LICENSE
+|-- ORIGINAL-DATA
+|   |-- anti_cancer_comps.csv
+|   |-- cancer_human_comps.csv
+|   |-- human_ctrl_comps.csv
+|   |-- uniprot-anti+cancer+peptide.fasta.gz
+|   `-- uniprot-taxonomy%3A%22Homo+sapiens+%28Human%29+%5B9606%5D%22+existence%3A%22Evid--.fasta.gz
+|-- README
+|-- README.2
+|-- anti-cancer-human-modeling.Rproj
+|-- boruta-dim-redux-GOOD
+|   |-- Boruta-notes.rmd
+|   |-- boruta-dim-redux-1.html
+|   |-- boruta-dim-redux-1.rmd
+|   |-- boruta-dim-redux-2-50-runs.rmd
+|   |-- boruta-dim-redux-2.html
+|   |-- boruta-dim-redux-3-500-runs.html
+|   |-- boruta-dim-redux-3-500-runs.rmd
+|   `-- boruta-dim-redux-4-500-runs.rmd
+|-- corrplot-GOOD
+|   |-- corrplot-1.html
+|   |-- corrplot-1.rmd
+|   |-- corrplot-2-w-post-boruta.html
+|   `-- corrplot-2-w-post-boruta.rmd
+|-- eda-GOOD
+|   |-- class_table.Rdata
+|   `-- eda.1.rmd
+|-- factominer-NO-GOOD
+|   |-- Investigate.Rmd
+|   |-- Workspace.RData
+|   |-- code.R
+|   `-- factominer-1.rmd
+|-- misc-info
+|   |-- KEEP_mono_di_peptide_analysis.Rmd
+|   |-- dipeptide_analysis.Rmd
+|   |-- mono_di_peptide_analysis-II.Rmd
+|   `-- na_test.rmd
+|-- near-zero-variance-GOOD
+|   |-- near-zero-variance-1.html
+|   `-- near-zero-variance-1.rmd
+|-- pca-dim-redux
+|   |-- pca-dim-redux-139-features-9-2-19.rmd
+|   |-- pca-dim-redux-139-wAC-features-9-2-19.rmd
+|   |-- pca-dim-redux-142-features-9-2-19.rmd
+|   |-- pca-dim-redux-20aa-BEST.html
+|   |-- pca-dim-redux-20aa-BEST.rmd
+|   |-- pca-dim-redux-20aa-beta.rmd
+|   |-- pca-dim-redux-20aa.rmd
+|   |-- pca-dim-redux-friday1.rmd
+|   `-- pca-dim-redux.rmd
+|-- realtive-imp-NO-GOOD
+|   `-- rela-imp-dim-redux-1.rmd
+|-- reject-corr-predictors-GOOD
+|   |-- identifying-correlated-predictors-1.html
+|   `-- identifying-correlated-predictors-1.rmd
+`-- rfe
+    `-- rfe-1.rmd
 
-This project contains:
-
-- 1data - contains 2 x 905 proteins for anticancer-human modeling
-- anti-cancer-comps - script & .csv of anti-cancer AAC & DPC values
-- eda
-- human-comps - script & .csv of human-ctrl AAC & DPC values
-- misc-info - files of test scripts and misc.
-- ORIGINAL-DATA - .fasta.gz files with anti-cancer peptides & 20k human proteins for experimental control
-- pca-dim-redux
-
-- anti-cancer-human-modeling.Rproj - needed for RStudio
-- LICENSE
-- README
+14 directories, 52 files
